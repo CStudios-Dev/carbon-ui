@@ -1,4 +1,4 @@
--- carbon ui -- is made by melissa
+-- is made by melissa
 local Twen = game:GetService('TweenService');
 local Input = game:GetService('UserInputService');
 local TextServ = game:GetService('TextService');
@@ -565,7 +565,7 @@ ScreenGui.Name = "RobloxGameGui";
 MainFrame.Name = "MainFrame"
 MainFrame.Parent = ScreenGui
 MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-MainFrame.BackgroundColor3 =   -- Darker red
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 5, 5) -- Darker red
 MainFrame.BackgroundTransparency = 1
 MainFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 MainFrame.BorderSizePixel = 0
