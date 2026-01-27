@@ -278,7 +278,7 @@ BackgroundTransparency = 0
 }):Play()
 else
 Twen:Create(frame,TweenInfo.new(0.5),{
-BackgroundTransparency = 0.4
+BackgroundTransparency = 0.1
 }):Play()
 end;
 end)
@@ -463,7 +463,7 @@ ImageButton.ImageTransparency = 1
 local HomeIcon = Instance.new("ImageLabel")
 HomeIcon.Parent = ImageButton
 HomeIcon.AnchorPoint = Vector2.new(0.5, 0.5)
-HomeIcon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Icon.BackgroundColor3 = Color3.fromRGB(0, 100, 255)
 HomeIcon.BorderColor3 = Color3.fromRGB(0, 0, 0)
 HomeIcon.BorderSizePixel = 0
 HomeIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -479,7 +479,7 @@ ImageButton.Size = UDim2.new(0.12, 0, 0.12, 0)
 end
 local function Update()
 if WindowTable.WindowToggle then
-Twen:Create(MainFrame,TweenInfo.new(0.7,Enum.EasingStyle.Quint),{BackgroundTransparency = 0.4,Size = config.Size}):Play();
+Twen:Create(MainFrame,TweenInfo.new(0.7,Enum.EasingStyle.Quint),{BackgroundTransparency = 0.1,Size = config.Size}):Play();
 Twen:Create(MainDropShadow,TweenInfo1,{ImageTransparency = 0.6}):Play();
 Twen:Create(Headers,TweenInfo1,{BackgroundTransparency = 0.5}):Play();
 Twen:Create(Logo,TweenInfo1,{ImageTransparency = 0}):Play();
@@ -576,7 +576,7 @@ MainFrame.ClipsDescendants = true;
 WindowTable.AddEffect = function(color)
 Library.GradientImage(MainFrame,color or Color3.fromRGB(0, 50, 150)) -- Blue gradient
 end
-Twen:Create(MainFrame,TweenInfo1,{BackgroundTransparency = 0.4,Size = config.Size}):Play();
+Twen:Create(MainFrame,TweenInfo1,{BackgroundTransparency = 0.1,Size = config.Size}):Play();
 WindowTable.ElBlurUI = ElBlurSource.new(MainFrame);
 UICorner.CornerRadius = UDim.new(0, 7)
 UICorner.Parent = MainFrame
@@ -1145,7 +1145,7 @@ UICorner.Parent = TabButton
 Icon.Name = "Icon"
 Icon.Parent = TabButton
 Icon.AnchorPoint = Vector2.new(0.5, 0.5)
-Icon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Icon.BackgroundColor3 = Color3.fromRGB(0, 100, 255)
 Icon.BackgroundTransparency = 1.000
 Icon.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Icon.BorderSizePixel = 0
@@ -1173,6 +1173,14 @@ end
 Twen:Create(Icon,TweenInfo2,{ImageTransparency = 0.1}):Play();
 UICorner_2.CornerRadius = UDim.new(0, 3)
 UICorner_2.Parent = Icon
+local IconGradient = Instance.new("UIGradient")
+IconGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 150, 255)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 100, 255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 50, 200))
+}
+IconGradient.Rotation = 45
+IconGradient.Parent = Icon
 UIGradient.Rotation = 90
 UIGradient.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 0.00), NumberSequenceKeypoint.new(0.75, 0.27), NumberSequenceKeypoint.new(1.00, 1.00)}
 UIGradient.Parent = Icon
@@ -1397,7 +1405,7 @@ UICorner_2.Parent = Header
 Icon.Name = "Icon"
 Icon.Parent = Header
 Icon.AnchorPoint = Vector2.new(0.5, 0.5)
-Icon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Icon.BackgroundColor3 = Color3.fromRGB(0, 100, 255)
 Icon.BackgroundTransparency = 1.000
 Icon.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Icon.BorderSizePixel = 0
@@ -1531,7 +1539,7 @@ UICorner_2.Parent = Header
 Icon.Name = "Icon"
 Icon.Parent = Header
 Icon.AnchorPoint = Vector2.new(0.5, 0.5)
-Icon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Icon.BackgroundColor3 = Color3.fromRGB(0, 100, 255)
 Icon.BackgroundTransparency = 1.000
 Icon.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Icon.BorderSizePixel = 0
@@ -1762,7 +1770,7 @@ System.Name = "System"
 System.Parent = FunctionToggle
 System.AnchorPoint = Vector2.new(1, 0.5)
 System.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-System.BackgroundTransparency = 1.000
+System.BackgroundTransparency = 0.900
 System.BorderColor3 = Color3.fromRGB(0, 0, 0)
 System.BorderSizePixel = 0
 System.Position = UDim2.new(0.975000024, 0, 0.5, 0)
@@ -1776,7 +1784,7 @@ UIStroke_2.Parent = System
 Icon.Name = "Icon"
 Icon.Parent = System
 Icon.AnchorPoint = Vector2.new(0.5, 0.5)
-Icon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Icon.BackgroundColor3 = Color3.fromRGB(0, 100, 255)
 Icon.BackgroundTransparency = 0.500
 Icon.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Icon.BorderSizePixel = 0
@@ -1786,6 +1794,14 @@ Icon.SizeConstraint = Enum.SizeConstraint.RelativeYY
 Icon.ZIndex = 17
 UICorner_2.CornerRadius = UDim.new(1, 0)
 UICorner_2.Parent = Icon
+local IconGradient = Instance.new("UIGradient")
+IconGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 150, 255)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 100, 255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 50, 200))
+}
+IconGradient.Rotation = 45
+IconGradient.Parent = Icon
 UICorner_3.CornerRadius = UDim.new(0, 2)
 UICorner_3.Parent = FunctionToggle
 local function OnChange(value)
@@ -1795,7 +1811,7 @@ TextTransparency = 0.02
 }):Play()
 Twen:Create(Icon,TweenInfo.new(0.15,Enum.EasingStyle.Quint),{
 Position = UDim2.new(0.75, 0, 0.5, 0),
-BackgroundTransparency = 0.4
+BackgroundTransparency = 0.1
 }):Play()
 else
 Twen:Create(Icon,TweenInfo.new(0.15,Enum.EasingStyle.Quint),{
@@ -2055,7 +2071,7 @@ System.Name = "System"
 System.Parent = FunctionKeybind
 System.AnchorPoint = Vector2.new(1, 0.5)
 System.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-System.BackgroundTransparency = 1.000
+System.BackgroundTransparency = 0.900
 System.BorderColor3 = Color3.fromRGB(0, 0, 0)
 System.BorderSizePixel = 0
 System.Position = UDim2.new(0.975000024, 0, 0.5, 0)
@@ -2752,7 +2768,7 @@ System.Name = "System"
 System.Parent = FunctionToggle
 System.AnchorPoint = Vector2.new(1, 0.5)
 System.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-System.BackgroundTransparency = 1.000
+System.BackgroundTransparency = 0.900
 System.BorderColor3 = Color3.fromRGB(0, 0, 0)
 System.BorderSizePixel = 0
 System.Position = UDim2.new(0.975000024, 0, 0.5, 0)
@@ -2766,7 +2782,7 @@ UIStroke_2.Parent = System
 Icon.Name = "Icon"
 Icon.Parent = System
 Icon.AnchorPoint = Vector2.new(0.5, 0.5)
-Icon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Icon.BackgroundColor3 = Color3.fromRGB(0, 100, 255)
 Icon.BackgroundTransparency = 0.500
 Icon.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Icon.BorderSizePixel = 0
@@ -2776,6 +2792,14 @@ Icon.SizeConstraint = Enum.SizeConstraint.RelativeYY
 Icon.ZIndex = 17
 UICorner_2.CornerRadius = UDim.new(1, 0)
 UICorner_2.Parent = Icon
+local IconGradient = Instance.new("UIGradient")
+IconGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 150, 255)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 100, 255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 50, 200))
+}
+IconGradient.Rotation = 45
+IconGradient.Parent = Icon
 UICorner_3.CornerRadius = UDim.new(0, 2)
 UICorner_3.Parent = FunctionToggle
 local function OnChange(value)
@@ -2785,7 +2809,7 @@ TextTransparency = 0.02
 }):Play()
 Twen:Create(Icon,TweenInfo.new(0.15,Enum.EasingStyle.Quint),{
 Position = UDim2.new(0.75, 0, 0.5, 0),
-BackgroundTransparency = 0.4
+BackgroundTransparency = 0.1
 }):Play()
 else
 Twen:Create(Icon,TweenInfo.new(0.15,Enum.EasingStyle.Quint),{
@@ -3045,7 +3069,7 @@ System.Name = "System"
 System.Parent = FunctionKeybind
 System.AnchorPoint = Vector2.new(1, 0.5)
 System.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-System.BackgroundTransparency = 1.000
+System.BackgroundTransparency = 0.900
 System.BorderColor3 = Color3.fromRGB(0, 0, 0)
 System.BorderSizePixel = 0
 System.Position = UDim2.new(0.975000024, 0, 0.5, 0)
