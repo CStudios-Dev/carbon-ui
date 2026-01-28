@@ -580,6 +580,14 @@ Twen:Create(MainFrame,TweenInfo1,{BackgroundTransparency = 0.4,Size = config.Siz
 WindowTable.ElBlurUI = ElBlurSource.new(MainFrame);
 UICorner.CornerRadius = UDim.new(0, 7)
 UICorner.Parent = MainFrame
+local MainGradient = Instance.new("UIGradient")
+MainGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(40, 10, 5)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(60, 30, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(80, 60, 0))
+}
+MainGradient.Rotation = 45
+MainGradient.Parent = MainFrame
 MainDropShadow.Name = "MainDropShadow"
 MainDropShadow.Parent = MainFrame
 MainDropShadow.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -606,6 +614,13 @@ Headers.Position = UDim2.new(0.0100000743, 0, 0.015, 0)
 Headers.Size = UDim2.new(0.300000012, 0, 0.178419471, 0)
 Headers.ZIndex = 3
 Twen:Create(Headers,TweenInfo2,{BackgroundTransparency = 0.5}):Play();
+local HeaderGradient = Instance.new("UIGradient")
+HeaderGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(50, 15, 10)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 50, 20))
+}
+HeaderGradient.Rotation = 90
+HeaderGradient.Parent = Headers
 Logo.Name = "Logo"
 Logo.Parent = Headers
 Logo.Active = true
@@ -716,6 +731,13 @@ TabButtonFrame.ClipsDescendants = true
 TabButtonFrame.Position = UDim2.new(0.159999996, 0, 0.215000004, 0)
 TabButtonFrame.Size = UDim2.new(0.300000012, 0, 0.774999976, 0)
 Twen:Create(TabButtonFrame,TweenInfo2,{BackgroundTransparency = 0.5}):Play();
+local TabButtonGradient = Instance.new("UIGradient")
+TabButtonGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(35, 10, 5)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(60, 40, 10))
+}
+TabButtonGradient.Rotation = 90
+TabButtonGradient.Parent = TabButtonFrame
 UICorner_6.CornerRadius = UDim.new(0, 3)
 UICorner_6.Parent = TabButtonFrame
 TabButtons.Name = "TabButtons"
@@ -748,6 +770,13 @@ MainTabFrame.ClipsDescendants = true
 MainTabFrame.Position = UDim2.new(0.657999992, 0, 0.130999997, 0)
 MainTabFrame.Size = UDim2.new(0.670000017, 0, 0.860000014, 0)
 Twen:Create(MainTabFrame,TweenInfo2,{BackgroundTransparency = 0.5}):Play();
+local MainTabGradient = Instance.new("UIGradient")
+MainTabGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(35, 10, 5)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(60, 40, 10))
+}
+MainTabGradient.Rotation = 45
+MainTabGradient.Parent = MainTabFrame
 UICorner_7.CornerRadius = UDim.new(0, 3)
 UICorner_7.Parent = MainTabFrame
 InputFrame.Name = "InputFrame"
