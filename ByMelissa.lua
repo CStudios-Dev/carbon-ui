@@ -4081,34 +4081,12 @@ icon.AnchorPoint = Vector2.new(0, 0.5)
 icon.BackgroundTransparency = 1.000
 icon.Position = UDim2.new(0.05, 0, 0.5, 0)
 icon.Size = iconSize
--- try create lucide icon, fallback to plain ImageLabel
-local ok, iconObj = pcall(function()
-return Icons.Image({ Icon = ctfx.Icon, Size = iconSize })
-end)
-if ok and iconObj and iconObj.IconFrame then
--- remove placeholder and use actual IconFrame
-if icon and icon.Parent then icon:Destroy() end
-local realIcon = iconObj.IconFrame
-realIcon.Name = "icon"
-realIcon.AnchorPoint = Vector2.new(0, 0.5)
-realIcon.Position = UDim2.new(0.05, 0, 0.5, 0)
-realIcon.Size = iconSize
-realIcon.SizeConstraint = Enum.SizeConstraint.RelativeYY
-realIcon.ZIndex = 49
-realIcon.Parent = Notifiy
--- crucial: переназначаем локальную переменную, чтобы скрытие целилось в тот же объект
-icon = realIcon
-Twen:Create(icon, css_style, {
-ImageTransparency = 0
-}):Play()
-else
--- fallback: keep simple image label behavior
-icon.Image = ctfx.Icon
-icon.ImageTransparency = 1;
-Twen:Create(icon, css_style, {
-ImageTransparency = 0
-}):Play()
-end
+		-- Always use direct asset ID (no Lucide icons)
+		icon.Image = ctfx.Icon
+		icon.ImageTransparency = 1;
+		Twen:Create(icon, css_style, {
+			ImageTransparency = 0
+		}):Play()
 TextLabel.Parent = Notifiy
 TextLabel.BackgroundTransparency = 1.000
 TextLabel.Position = UDim2.new(textPos, 0, 0.1, 0)
