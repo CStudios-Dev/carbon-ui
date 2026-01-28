@@ -4028,7 +4028,7 @@ ctfx = Config(ctfx,{
 Title = "Notification",
 Description = "Description",
 Duration = 5,
-Icon = "rbxassetid://99016128697042"
+Icon = "rbxthumb://type=Asset&id=99016128697042&w=150&h=150"
 })
 local css_style = TweenInfo.new(0.5,Enum.EasingStyle.Quint,Enum.EasingDirection.Out); -- Smoother animation
 local Notifiy = Instance.new("Frame")
@@ -4081,9 +4081,12 @@ icon.AnchorPoint = Vector2.new(0, 0.5)
 icon.BackgroundTransparency = 1.000
 icon.Position = UDim2.new(0.05, 0, 0.5, 0)
 icon.Size = iconSize
+		icon.SizeConstraint = Enum.SizeConstraint.RelativeYY
+		icon.ZIndex = 49
 		-- Always use direct asset ID (no Lucide icons)
 		icon.Image = ctfx.Icon
 		icon.ImageTransparency = 1;
+		icon.ScaleType = Enum.ScaleType.Fit
 		Twen:Create(icon, css_style, {
 			ImageTransparency = 0
 		}):Play()
