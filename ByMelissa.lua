@@ -565,7 +565,7 @@ ScreenGui.Name = "RobloxGameGui";
 MainFrame.Name = "MainFrame"
 MainFrame.Parent = ScreenGui
 MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-MainFrame.BackgroundColor3 = Color3.fromRGB(15, 5, 5) -- Darker red
+MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0) -- Black
 MainFrame.BackgroundTransparency = 1
 MainFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 MainFrame.BorderSizePixel = 0
@@ -574,20 +574,12 @@ MainFrame.Size = UDim2.fromOffset(config.Size.X.Offset,config.Size.Y.Offset)
 MainFrame.Active = true;
 MainFrame.ClipsDescendants = true;
 WindowTable.AddEffect = function(color)
-Library.GradientImage(MainFrame,color or Color3.fromRGB(100, 0, 0)) -- Darker gradient
+Library.GradientImage(MainFrame,color or Color3.fromRGB(10, 10, 10)) -- Black gradient
 end
 Twen:Create(MainFrame,TweenInfo1,{BackgroundTransparency = 0.4,Size = config.Size}):Play();
 WindowTable.ElBlurUI = ElBlurSource.new(MainFrame);
 UICorner.CornerRadius = UDim.new(0, 7)
 UICorner.Parent = MainFrame
-local MainGradient = Instance.new("UIGradient")
-MainGradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(40, 10, 5)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(60, 30, 0)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(80, 60, 0))
-}
-MainGradient.Rotation = 45
-MainGradient.Parent = MainFrame
 MainDropShadow.Name = "MainDropShadow"
 MainDropShadow.Parent = MainFrame
 MainDropShadow.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -597,7 +589,7 @@ MainDropShadow.Position = UDim2.new(0.5, 0, 0.5, 0)
 MainDropShadow.Size = UDim2.new(1, 47, 1, 47)
 MainDropShadow.ZIndex = 0
 MainDropShadow.Image = "rbxassetid://6015897843"
-MainDropShadow.ImageColor3 = Color3.fromRGB(50, 0, 0) -- Darker red shadow
+MainDropShadow.ImageColor3 = Color3.fromRGB(0, 0, 0) -- Black shadow
 MainDropShadow.ImageTransparency = 1
 MainDropShadow.ScaleType = Enum.ScaleType.Slice
 MainDropShadow.SliceCenter = Rect.new(49, 49, 450, 450)
@@ -605,7 +597,7 @@ MainDropShadow.Rotation = 0.0001;
 Twen:Create(MainDropShadow,TweenInfo2,{ImageTransparency = 0.6}):Play();
 Headers.Name = "Headers"
 Headers.Parent = MainFrame
-Headers.BackgroundColor3 = Color3.fromRGB(20, 5, 5) -- Darker red
+Headers.BackgroundColor3 = Color3.fromRGB(10, 10, 10) -- Black
 Headers.BackgroundTransparency = 1
 Headers.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Headers.BorderSizePixel = 0
@@ -614,13 +606,6 @@ Headers.Position = UDim2.new(0.0100000743, 0, 0.015, 0)
 Headers.Size = UDim2.new(0.300000012, 0, 0.178419471, 0)
 Headers.ZIndex = 3
 Twen:Create(Headers,TweenInfo2,{BackgroundTransparency = 0.5}):Play();
-local HeaderGradient = Instance.new("UIGradient")
-HeaderGradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(50, 15, 10)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 50, 20))
-}
-HeaderGradient.Rotation = 90
-HeaderGradient.Parent = Headers
 Logo.Name = "Logo"
 Logo.Parent = Headers
 Logo.Active = true
@@ -676,7 +661,7 @@ Twen:Create(Description,TweenInfo2,{TextTransparency = 0.5}):Play();
 BlockFrame1.Name = "BlockFrame1"
 BlockFrame1.Parent = MainFrame
 BlockFrame1.AnchorPoint = Vector2.new(0, 0.5)
-BlockFrame1.BackgroundColor3 = Color3.fromRGB(150, 0, 0) -- Darker red
+BlockFrame1.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- Black
 BlockFrame1.BackgroundTransparency = 1
 BlockFrame1.BorderColor3 = Color3.fromRGB(0, 0, 0)
 BlockFrame1.BorderSizePixel = 0
@@ -692,7 +677,7 @@ UIGradient_3.Parent = BlockFrame1
 BlockFrame3.Name = "BlockFrame3"
 BlockFrame3.Parent = MainFrame
 BlockFrame3.AnchorPoint = Vector2.new(0, 0.5)
-BlockFrame3.BackgroundColor3 = Color3.fromRGB(150, 0, 0) -- Darker red
+BlockFrame3.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- Black
 BlockFrame3.BackgroundTransparency = 1
 BlockFrame3.BorderColor3 = Color3.fromRGB(0, 0, 0)
 BlockFrame3.BorderSizePixel = 0
@@ -707,7 +692,7 @@ UIGradient_4.Parent = BlockFrame3
 BlockFrame2.Name = "BlockFrame2"
 BlockFrame2.Parent = MainFrame
 BlockFrame2.AnchorPoint = Vector2.new(0, 0.5)
-BlockFrame2.BackgroundColor3 = Color3.fromRGB(150, 0, 0) -- Darker red
+BlockFrame2.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- Black
 BlockFrame2.BackgroundTransparency = 1
 BlockFrame2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 BlockFrame2.BorderSizePixel = 0
@@ -723,7 +708,7 @@ UIGradient_5.Parent = BlockFrame2
 TabButtonFrame.Name = "TabButtonFrame"
 TabButtonFrame.Parent = MainFrame
 TabButtonFrame.AnchorPoint = Vector2.new(0.5, 0)
-TabButtonFrame.BackgroundColor3 = Color3.fromRGB(20, 5, 5) -- Darker red
+TabButtonFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10) -- Black
 TabButtonFrame.BackgroundTransparency = 1
 TabButtonFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TabButtonFrame.BorderSizePixel = 0
@@ -731,13 +716,6 @@ TabButtonFrame.ClipsDescendants = true
 TabButtonFrame.Position = UDim2.new(0.159999996, 0, 0.215000004, 0)
 TabButtonFrame.Size = UDim2.new(0.300000012, 0, 0.774999976, 0)
 Twen:Create(TabButtonFrame,TweenInfo2,{BackgroundTransparency = 0.5}):Play();
-local TabButtonGradient = Instance.new("UIGradient")
-TabButtonGradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(35, 10, 5)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(60, 40, 10))
-}
-TabButtonGradient.Rotation = 90
-TabButtonGradient.Parent = TabButtonFrame
 UICorner_6.CornerRadius = UDim.new(0, 3)
 UICorner_6.Parent = TabButtonFrame
 TabButtons.Name = "TabButtons"
@@ -762,7 +740,7 @@ UIListLayout.Padding = UDim.new(0, 3)
 MainTabFrame.Name = "MainTabFrame"
 MainTabFrame.Parent = MainFrame
 MainTabFrame.AnchorPoint = Vector2.new(0.5, 0)
-MainTabFrame.BackgroundColor3 = Color3.fromRGB(20, 5, 5) -- Darker red
+MainTabFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10) -- Black
 MainTabFrame.BackgroundTransparency = 1
 MainTabFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 MainTabFrame.BorderSizePixel = 0
@@ -770,13 +748,6 @@ MainTabFrame.ClipsDescendants = true
 MainTabFrame.Position = UDim2.new(0.657999992, 0, 0.130999997, 0)
 MainTabFrame.Size = UDim2.new(0.670000017, 0, 0.860000014, 0)
 Twen:Create(MainTabFrame,TweenInfo2,{BackgroundTransparency = 0.5}):Play();
-local MainTabGradient = Instance.new("UIGradient")
-MainTabGradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(35, 10, 5)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(60, 40, 10))
-}
-MainTabGradient.Rotation = 45
-MainTabGradient.Parent = MainTabFrame
 UICorner_7.CornerRadius = UDim.new(0, 3)
 UICorner_7.Parent = MainTabFrame
 InputFrame.Name = "InputFrame"
@@ -1247,7 +1218,7 @@ UIGradient_3.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 
 UIGradient_3.Parent = Description
 Frame.Parent = TabButton
 Frame.AnchorPoint = Vector2.new(1, 0.5)
-Frame.BackgroundColor3 = Color3.fromRGB(150, 0, 0) -- Darker red
+Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- Black
 Frame.BackgroundTransparency = 1
 Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Frame.BorderSizePixel = 0
@@ -4057,7 +4028,7 @@ ctfx = Config(ctfx,{
 Title = "Notification",
 Description = "Description",
 Duration = 5,
-Icon = "rbxassetid://8997385628"
+Icon = "rbxassetid://99016128697042"
 })
 local css_style = TweenInfo.new(0.5,Enum.EasingStyle.Quint,Enum.EasingDirection.Out); -- Smoother animation
 local Notifiy = Instance.new("Frame")
@@ -4097,7 +4068,7 @@ Notifiy.ClipsDescendants = true
 Notifiy.Size = notifySize
 Notifiy.Position = UDim2.new(1,0,1,0)
 Twen:Create(Notifiy,css_style,{
-BackgroundTransparency = 0.350,
+BackgroundTransparency = 0.05,
 Position = UDim2.new(0,0,1,0)
 }):Play()
 UICorner.CornerRadius = UDim.new(0,4)
