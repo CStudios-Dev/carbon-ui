@@ -565,7 +565,7 @@ ScreenGui.Name = "RobloxGameGui";
 MainFrame.Name = "MainFrame"
 MainFrame.Parent = ScreenGui
 MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0) -- Black
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 5, 5) -- Darker red
 MainFrame.BackgroundTransparency = 1
 MainFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 MainFrame.BorderSizePixel = 0
@@ -574,7 +574,7 @@ MainFrame.Size = UDim2.fromOffset(config.Size.X.Offset,config.Size.Y.Offset)
 MainFrame.Active = true;
 MainFrame.ClipsDescendants = true;
 WindowTable.AddEffect = function(color)
-Library.GradientImage(MainFrame,color or Color3.fromRGB(10, 10, 10)) -- Black gradient
+Library.GradientImage(MainFrame,color or Color3.fromRGB(100, 0, 0)) -- Darker gradient
 end
 Twen:Create(MainFrame,TweenInfo1,{BackgroundTransparency = 0.4,Size = config.Size}):Play();
 WindowTable.ElBlurUI = ElBlurSource.new(MainFrame);
@@ -589,7 +589,7 @@ MainDropShadow.Position = UDim2.new(0.5, 0, 0.5, 0)
 MainDropShadow.Size = UDim2.new(1, 47, 1, 47)
 MainDropShadow.ZIndex = 0
 MainDropShadow.Image = "rbxassetid://6015897843"
-MainDropShadow.ImageColor3 = Color3.fromRGB(0, 0, 0) -- Black shadow
+MainDropShadow.ImageColor3 = Color3.fromRGB(50, 0, 0) -- Darker red shadow
 MainDropShadow.ImageTransparency = 1
 MainDropShadow.ScaleType = Enum.ScaleType.Slice
 MainDropShadow.SliceCenter = Rect.new(49, 49, 450, 450)
@@ -597,7 +597,7 @@ MainDropShadow.Rotation = 0.0001;
 Twen:Create(MainDropShadow,TweenInfo2,{ImageTransparency = 0.6}):Play();
 Headers.Name = "Headers"
 Headers.Parent = MainFrame
-Headers.BackgroundColor3 = Color3.fromRGB(10, 10, 10) -- Black
+Headers.BackgroundColor3 = Color3.fromRGB(20, 5, 5) -- Darker red
 Headers.BackgroundTransparency = 1
 Headers.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Headers.BorderSizePixel = 0
@@ -661,7 +661,7 @@ Twen:Create(Description,TweenInfo2,{TextTransparency = 0.5}):Play();
 BlockFrame1.Name = "BlockFrame1"
 BlockFrame1.Parent = MainFrame
 BlockFrame1.AnchorPoint = Vector2.new(0, 0.5)
-BlockFrame1.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- Black
+BlockFrame1.BackgroundColor3 = Color3.fromRGB(150, 0, 0) -- Darker red
 BlockFrame1.BackgroundTransparency = 1
 BlockFrame1.BorderColor3 = Color3.fromRGB(0, 0, 0)
 BlockFrame1.BorderSizePixel = 0
@@ -677,7 +677,7 @@ UIGradient_3.Parent = BlockFrame1
 BlockFrame3.Name = "BlockFrame3"
 BlockFrame3.Parent = MainFrame
 BlockFrame3.AnchorPoint = Vector2.new(0, 0.5)
-BlockFrame3.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- Black
+BlockFrame3.BackgroundColor3 = Color3.fromRGB(150, 0, 0) -- Darker red
 BlockFrame3.BackgroundTransparency = 1
 BlockFrame3.BorderColor3 = Color3.fromRGB(0, 0, 0)
 BlockFrame3.BorderSizePixel = 0
@@ -692,7 +692,7 @@ UIGradient_4.Parent = BlockFrame3
 BlockFrame2.Name = "BlockFrame2"
 BlockFrame2.Parent = MainFrame
 BlockFrame2.AnchorPoint = Vector2.new(0, 0.5)
-BlockFrame2.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- Black
+BlockFrame2.BackgroundColor3 = Color3.fromRGB(150, 0, 0) -- Darker red
 BlockFrame2.BackgroundTransparency = 1
 BlockFrame2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 BlockFrame2.BorderSizePixel = 0
@@ -708,7 +708,7 @@ UIGradient_5.Parent = BlockFrame2
 TabButtonFrame.Name = "TabButtonFrame"
 TabButtonFrame.Parent = MainFrame
 TabButtonFrame.AnchorPoint = Vector2.new(0.5, 0)
-TabButtonFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10) -- Black
+TabButtonFrame.BackgroundColor3 = Color3.fromRGB(20, 5, 5) -- Darker red
 TabButtonFrame.BackgroundTransparency = 1
 TabButtonFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TabButtonFrame.BorderSizePixel = 0
@@ -740,7 +740,7 @@ UIListLayout.Padding = UDim.new(0, 3)
 MainTabFrame.Name = "MainTabFrame"
 MainTabFrame.Parent = MainFrame
 MainTabFrame.AnchorPoint = Vector2.new(0.5, 0)
-MainTabFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10) -- Black
+MainTabFrame.BackgroundColor3 = Color3.fromRGB(20, 5, 5) -- Darker red
 MainTabFrame.BackgroundTransparency = 1
 MainTabFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 MainTabFrame.BorderSizePixel = 0
@@ -1218,7 +1218,7 @@ UIGradient_3.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 
 UIGradient_3.Parent = Description
 Frame.Parent = TabButton
 Frame.AnchorPoint = Vector2.new(1, 0.5)
-Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- Black
+Frame.BackgroundColor3 = Color3.fromRGB(150, 0, 0) -- Darker red
 Frame.BackgroundTransparency = 1
 Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Frame.BorderSizePixel = 0
@@ -4028,7 +4028,7 @@ ctfx = Config(ctfx,{
 Title = "Notification",
 Description = "Description",
 Duration = 5,
-Icon = "rbxthumb://type=Asset&id=99016128697042&w=150&h=150"
+Icon = "rbxassetid://8997385628"
 })
 local css_style = TweenInfo.new(0.5,Enum.EasingStyle.Quint,Enum.EasingDirection.Out); -- Smoother animation
 local Notifiy = Instance.new("Frame")
@@ -4068,7 +4068,7 @@ Notifiy.ClipsDescendants = true
 Notifiy.Size = notifySize
 Notifiy.Position = UDim2.new(1,0,1,0)
 Twen:Create(Notifiy,css_style,{
-BackgroundTransparency = 0.05,
+BackgroundTransparency = 0.350,
 Position = UDim2.new(0,0,1,0)
 }):Play()
 UICorner.CornerRadius = UDim.new(0,4)
@@ -4081,15 +4081,34 @@ icon.AnchorPoint = Vector2.new(0, 0.5)
 icon.BackgroundTransparency = 1.000
 icon.Position = UDim2.new(0.05, 0, 0.5, 0)
 icon.Size = iconSize
-		icon.SizeConstraint = Enum.SizeConstraint.RelativeYY
-		icon.ZIndex = 49
-		-- Always use direct asset ID (no Lucide icons)
-		icon.Image = ctfx.Icon
-		icon.ImageTransparency = 1;
-		icon.ScaleType = Enum.ScaleType.Fit
-		Twen:Create(icon, css_style, {
-			ImageTransparency = 0
-		}):Play()
+-- try create lucide icon, fallback to plain ImageLabel
+local ok, iconObj = pcall(function()
+return Icons.Image({ Icon = ctfx.Icon, Size = iconSize })
+end)
+if ok and iconObj and iconObj.IconFrame then
+-- remove placeholder and use actual IconFrame
+if icon and icon.Parent then icon:Destroy() end
+local realIcon = iconObj.IconFrame
+realIcon.Name = "icon"
+realIcon.AnchorPoint = Vector2.new(0, 0.5)
+realIcon.Position = UDim2.new(0.05, 0, 0.5, 0)
+realIcon.Size = iconSize
+realIcon.SizeConstraint = Enum.SizeConstraint.RelativeYY
+realIcon.ZIndex = 49
+realIcon.Parent = Notifiy
+-- crucial: переназначаем локальную переменную, чтобы скрытие целилось в тот же объект
+icon = realIcon
+Twen:Create(icon, css_style, {
+ImageTransparency = 0
+}):Play()
+else
+-- fallback: keep simple image label behavior
+icon.Image = ctfx.Icon
+icon.ImageTransparency = 1;
+Twen:Create(icon, css_style, {
+ImageTransparency = 0
+}):Play()
+end
 TextLabel.Parent = Notifiy
 TextLabel.BackgroundTransparency = 1.000
 TextLabel.Position = UDim2.new(textPos, 0, 0.1, 0)
