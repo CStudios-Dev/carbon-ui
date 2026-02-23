@@ -8,16 +8,16 @@ local CoreGui = (gethui and gethui()) or game:FindFirstChild('CoreGui') or Local
 
 -- ─── Palette ────────────────────────────────────────────────────────────────
 local C = {
-    BG          = Color3.fromRGB(13,  13,  16),   -- main window bg
-    PANEL       = Color3.fromRGB(19,  19,  24),   -- sidebar / section panel
-    ELEMENT     = Color3.fromRGB(22,  22,  28),   -- element row bg
+    BG          = Color3.fromRGB(0,   0,   0),    -- main window bg (pure black)
+    PANEL       = Color3.fromRGB(8,   8,   8),    -- sidebar / section panel
+    ELEMENT     = Color3.fromRGB(12,  12,  12),   -- element row bg
     ACCENT      = Color3.fromRGB(185,  0,  80),   -- pink/magenta accent
     ACCENT_DIM  = Color3.fromRGB(100,  0,  45),   -- dimmed accent
     SHADOW      = Color3.fromRGB(60,   0,  30),   -- shadow tint
     WHITE       = Color3.fromRGB(255, 255, 255),
     TEXT        = Color3.fromRGB(220, 220, 220),
     SUBTEXT     = Color3.fromRGB(130, 130, 145),
-    STROKE      = Color3.fromRGB(50,  50,  65),
+    STROKE      = Color3.fromRGB(35,  35,  35),
 }
 -- ────────────────────────────────────────────────────────────────────────────
 
