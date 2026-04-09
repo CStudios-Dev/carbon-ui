@@ -1,4 +1,4 @@
--- is made by melissa
+-- is made by melissa open source :)
 local Twen = game:GetService('TweenService');
 local Input = game:GetService('UserInputService');
 local TextServ = game:GetService('TextService');
