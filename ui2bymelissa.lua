@@ -61,25 +61,8 @@ pcall(function()
     end
 end)
 
-local IconMap = {
-    home = "⌂",
-    settings = "⚙",
-    menu = "☰",
-    user = "👤",
-    search = "⌕",
-    bell = "🔔",
-    info = "ⓘ",
-    star = "★",
-    folder = "🗀",
-    shield = "🛡",
-    zap = "⚡",
-    play = "▶",
-    terminal = ">_",
-    grid = "☷",
-    sliders = "≡",
-    toolbox = "🧰",
-    panel = "▣"
-}
+local IconMap = {}
+-- All icons resolved via LucideAssets only (no emoji fallbacks)
 
 local function cloneTable(tbl)
     local new = {}
@@ -497,22 +480,14 @@ function WindowClass:_applyResponsive()
     local tabW = twoSides and 48 or self.Config.TabWidth
 
     if breakpoint == "Mobile" then
-        self.BodyList.FillDirection = Enum.FillDirection.Vertical
-        self.TabsFrame.Size = UDim2.new(1, 0, 0, 44)
-        self.TabsList.FillDirection = Enum.FillDirection.Horizontal
-        self.TabsList.Padding = UDim.new(0, 6)
-        self.ContentFrame.Size = UDim2.new(1, 0, 1, -44)
+        self.ContentFrame.Size = UDim2.fromScale(1, 1)
     else
-        self.BodyList.FillDirection = Enum.FillDirection.Vertical
-        self.TabsFrame.Size = UDim2.new(1, 0, 0, 44)
-        self.TabsList.FillDirection = Enum.FillDirection.Horizontal
-        self.TabsList.Padding = UDim.new(0, 6)
-        self.ContentFrame.Size = UDim2.new(1, 0, 1, -44)
+        self.ContentFrame.Size = UDim2.fromScale(1, 1)
     end
 
     for _, tab in ipairs(self.Tabs) do
         if breakpoint == "Mobile" then
-            tab.Button.Size = UDim2.fromOffset(110, 38)
+            tab.Button.Size = UDim2.fromOffset(110, 32)
             if tab.TextLabel then tab.TextLabel.Visible = true end
             if tab.IconLabel then
                 tab.IconLabel.Position = UDim2.new(0, 10, 0.5, -7)
@@ -526,7 +501,7 @@ function WindowClass:_applyResponsive()
                 tab.IconLabel.Position = UDim2.new(0.5, -math.floor(s / 2), 0.5, -math.floor(s / 2))
             end
         else
-            tab.Button.Size = UDim2.fromOffset(110, 38)
+            tab.Button.Size = UDim2.fromOffset(110, 32)
             if tab.TextLabel then tab.TextLabel.Visible = true end
             if tab.IconLabel then
                 tab.IconLabel.Position = UDim2.new(0, 10, 0.5, -7)
@@ -539,6 +514,10 @@ function WindowClass:SetVisible(state)
     self.Visible = state
 
     local savedAlpha = (self.Settings and self.Settings.Transparency) or 0.05
+
+    if self.TabsFrame then
+        self.TabsFrame.Visible = state
+    end
 
     if state then
         self.Frame.Visible = true
@@ -2122,7 +2101,7 @@ local function CreateWindowShell(window)
         BackgroundColor3 = theme.Shadow,
         BackgroundTransparency = 0.7
     })
-    -- no corner on shadow (rectangular window)
+    MakeCorner(shadow, 12)
 
     local frame = New("Frame", {
         Parent = root,
@@ -2133,7 +2112,7 @@ local function CreateWindowShell(window)
         BackgroundTransparency = 0.05,
         ClipsDescendants = true
     })
-    -- no corner on main frame (rectangular window)
+    MakeCorner(frame, 12)
     local scale = New("UIScale", {
         Parent = frame,
         Scale = 1
@@ -2289,33 +2268,34 @@ local function CreateWindowShell(window)
         Size = UDim2.new(1, 0, 1, -53)
     })
 
-    local bodyList = MakeList(body, Enum.FillDirection.Horizontal, 0)
+    local bodyList = MakeList(body, Enum.FillDirection.Vertical, 0)
 
+    -- Floating tab bar — separate from window, positioned below it
     local tabsFrame = New("Frame", {
-        Parent = body,
+        Parent = root,
         BackgroundColor3 = theme.Surface,
         BackgroundTransparency = 0,
         BorderSizePixel = 0,
-        Size = UDim2.new(0, window.Config.TabWidth, 1, 0),
-        LayoutOrder = 2
+        Size = UDim2.fromOffset(window.Config.Size.X.Offset, 44),
+        ZIndex = 5
     })
+    MakeCorner(tabsFrame, 10)
     MakeStroke(tabsFrame, theme.Border, 1, 0)
 
-    -- _applyResponsive uses 44px height now
     local tabsScroll = New("ScrollingFrame", {
         Parent = tabsFrame,
         BackgroundTransparency = 1,
         BorderSizePixel = 0,
         AnchorPoint = Vector2.new(0.5, 0.5),
         Position = UDim2.new(0.5, 0, 0.5, 0),
-        Size = UDim2.new(1, -20, 1, 0),
+        Size = UDim2.new(1, -16, 1, -8),
         CanvasSize = UDim2.new(),
         AutomaticCanvasSize = Enum.AutomaticSize.X,
         ScrollBarThickness = 0,
         ElasticBehavior = Enum.ElasticBehavior.Never,
-        ScrollingDirection = Enum.ScrollingDirection.X
+        ScrollingDirection = Enum.ScrollingDirection.X,
+        ZIndex = 5
     })
-    MakePadding(tabsScroll, 6, 6, 6, 6)
     local tabsList = New("UIListLayout", {
         Parent = tabsScroll,
         FillDirection = Enum.FillDirection.Horizontal,
@@ -2325,11 +2305,11 @@ local function CreateWindowShell(window)
         VerticalAlignment = Enum.VerticalAlignment.Center
     })
 
+    -- Content fills full body height (tabs are detached)
     local contentFrame = New("Frame", {
         Parent = body,
         BackgroundTransparency = 1,
-        Size = UDim2.new(1, -window.Config.TabWidth, 1, 0),
-        LayoutOrder = 1
+        Size = UDim2.fromScale(1, 1)
     })
 
     local contentPages = New("Frame", {
@@ -2337,6 +2317,14 @@ local function CreateWindowShell(window)
         BackgroundTransparency = 1,
         Size = UDim2.fromScale(1, 1)
     })
+
+    -- Keep tab bar in sync with window position/size
+    local function SyncTabBar()
+        local ap = frame.AbsolutePosition
+        local as = frame.AbsoluteSize
+        tabsFrame.Position = UDim2.fromOffset(ap.X, ap.Y + as.Y + 8)
+        tabsFrame.Size = UDim2.fromOffset(as.X, 44)
+    end
 
     window.Gui = gui
     window.Root = root
@@ -2690,6 +2678,7 @@ local function CreateWindowShell(window)
                 pos.X.Scale, pos.X.Offset,
                 pos.Y.Scale, pos.Y.Offset + 4
             )
+            SyncTabBar()
         end)
     end
 
@@ -2698,15 +2687,18 @@ local function CreateWindowShell(window)
             frame.Position.X.Scale, frame.Position.X.Offset,
             frame.Position.Y.Scale, frame.Position.Y.Offset + 4
         )
+        SyncTabBar()
     end)
 
     frame:GetPropertyChangedSignal("Size"):Connect(function()
         shadow.Size = frame.Size
+        SyncTabBar()
     end)
 
     window:_createResizeHandle()
     window:_createFloatingButton()
     window:_applyResponsive()
+    task.defer(SyncTabBar)
 
     -- Aplica estado inicial do FloatHidden herdado do GlobalSettings
     if window.Settings.FloatHidden and window.FloatingButton then
