@@ -47,78 +47,6 @@ local Themes = {
         Warning = Color3.fromRGB(245, 158, 11),
         Error = Color3.fromRGB(239, 68, 68),
         Shadow = Color3.fromRGB(0, 0, 0)
-    },
-    Crimson = {
-        Name = "Crimson",
-        BackgroundTop = Color3.fromRGB(12, 4, 4),
-        BackgroundBottom = Color3.fromRGB(28, 8, 8),
-        Surface = Color3.fromRGB(16, 5, 5),
-        SurfaceAlt = Color3.fromRGB(24, 8, 8),
-        SurfaceLight = Color3.fromRGB(36, 12, 12),
-        Primary = Color3.fromRGB(220, 38, 38),
-        PrimaryAlt = Color3.fromRGB(239, 68, 68),
-        Text = Color3.fromRGB(255, 255, 255),
-        TextMuted = Color3.fromRGB(229, 229, 229),
-        TextDim = Color3.fromRGB(163, 163, 163),
-        Border = Color3.fromRGB(55, 18, 18),
-        Success = Color3.fromRGB(34, 197, 94),
-        Warning = Color3.fromRGB(245, 158, 11),
-        Error = Color3.fromRGB(239, 68, 68),
-        Shadow = Color3.fromRGB(0, 0, 0)
-    },
-    Ocean = {
-        Name = "Ocean",
-        BackgroundTop = Color3.fromRGB(4, 8, 18),
-        BackgroundBottom = Color3.fromRGB(8, 18, 34),
-        Surface = Color3.fromRGB(6, 12, 24),
-        SurfaceAlt = Color3.fromRGB(10, 18, 34),
-        SurfaceLight = Color3.fromRGB(16, 26, 46),
-        Primary = Color3.fromRGB(56, 189, 248),
-        PrimaryAlt = Color3.fromRGB(14, 165, 233),
-        Text = Color3.fromRGB(255, 255, 255),
-        TextMuted = Color3.fromRGB(229, 229, 229),
-        TextDim = Color3.fromRGB(163, 163, 163),
-        Border = Color3.fromRGB(18, 38, 68),
-        Success = Color3.fromRGB(34, 197, 94),
-        Warning = Color3.fromRGB(245, 158, 11),
-        Error = Color3.fromRGB(239, 68, 68),
-        Shadow = Color3.fromRGB(0, 0, 0)
-    },
-    Forest = {
-        Name = "Forest",
-        BackgroundTop = Color3.fromRGB(4, 14, 4),
-        BackgroundBottom = Color3.fromRGB(8, 24, 8),
-        Surface = Color3.fromRGB(6, 16, 6),
-        SurfaceAlt = Color3.fromRGB(10, 22, 10),
-        SurfaceLight = Color3.fromRGB(16, 32, 16),
-        Primary = Color3.fromRGB(34, 197, 94),
-        PrimaryAlt = Color3.fromRGB(74, 222, 128),
-        Text = Color3.fromRGB(255, 255, 255),
-        TextMuted = Color3.fromRGB(229, 229, 229),
-        TextDim = Color3.fromRGB(163, 163, 163),
-        Border = Color3.fromRGB(18, 50, 18),
-        Success = Color3.fromRGB(34, 197, 94),
-        Warning = Color3.fromRGB(245, 158, 11),
-        Error = Color3.fromRGB(239, 68, 68),
-        Shadow = Color3.fromRGB(0, 0, 0)
-    },
-    Violet = {
-        Name = "Violet",
-        BackgroundTop = Color3.fromRGB(8, 4, 18),
-        BackgroundBottom = Color3.fromRGB(16, 8, 32),
-        Surface = Color3.fromRGB(10, 6, 22),
-        SurfaceAlt = Color3.fromRGB(16, 10, 30),
-        SurfaceLight = Color3.fromRGB(24, 16, 42),
-        Primary = Color3.fromRGB(167, 139, 250),
-        PrimaryAlt = Color3.fromRGB(196, 181, 253),
-        Text = Color3.fromRGB(255, 255, 255),
-        TextMuted = Color3.fromRGB(229, 229, 229),
-        TextDim = Color3.fromRGB(163, 163, 163),
-        Border = Color3.fromRGB(40, 22, 68),
-        Success = Color3.fromRGB(34, 197, 94),
-        Warning = Color3.fromRGB(245, 158, 11),
-        Error = Color3.fromRGB(239, 68, 68),
-        Shadow = Color3.fromRGB(0, 0, 0)
     }
 }
 
@@ -195,7 +123,7 @@ end
 local function MakeCorner(parent, radius)
     return New("UICorner", {
         Parent = parent,
-        CornerRadius = UDim.new(0, radius or 10)
+        CornerRadius = UDim.new(0, 0)
     })
 end
 
@@ -568,60 +496,40 @@ function WindowClass:_applyResponsive()
     local twoSides = self.Config.TwoSides and breakpoint ~= "Mobile"
     local tabW = twoSides and 48 or self.Config.TabWidth
 
-    if self.Config.BottomTabs then
-        -- Bottom tab bar — fixed layout regardless of breakpoint
-        local TAB_BAR_H = 46
-        self.BodyList.FillDirection = Enum.FillDirection.Vertical
-        self.ContentFrame.Size = UDim2.new(1, 0, 1, -TAB_BAR_H)
-        self.TabsFrame.Size    = UDim2.new(1, 0, 0, TAB_BAR_H)
-        self.TabsList.FillDirection = Enum.FillDirection.Horizontal
-        self.TabsList.Padding = UDim.new(0, 2)
-
-        local tabCount = math.max(#self.Tabs, 1)
-        local btnW = math.max(70, math.floor((width - 12) / tabCount))
-        for _, tab in ipairs(self.Tabs) do
-            tab.Button.Size = UDim2.fromOffset(btnW, TAB_BAR_H - 10)
-            if tab.TextLabel then tab.TextLabel.Visible = true end
-            if tab.IconLabel then
-                tab.IconLabel.Position = UDim2.new(0, 10, 0.5, -7)
-            end
-        end
-    elseif breakpoint == "Mobile" then
+    if breakpoint == "Mobile" then
         self.BodyList.FillDirection = Enum.FillDirection.Vertical
         self.TabsFrame.Size = UDim2.new(1, 0, 0, 54)
         self.TabsList.FillDirection = Enum.FillDirection.Horizontal
         self.TabsList.Padding = UDim.new(0, 8)
         self.ContentFrame.Size = UDim2.new(1, 0, 1, -54)
     else
-        self.BodyList.FillDirection = Enum.FillDirection.Horizontal
-        self.TabsFrame.Size = UDim2.new(0, tabW, 1, 0)
-        self.TabsList.FillDirection = Enum.FillDirection.Vertical
+        self.BodyList.FillDirection = Enum.FillDirection.Vertical
+        self.TabsFrame.Size = UDim2.new(1, 0, 0, 54)
+        self.TabsList.FillDirection = Enum.FillDirection.Horizontal
         self.TabsList.Padding = UDim.new(0, 8)
-        self.ContentFrame.Size = UDim2.new(1, -tabW, 1, 0)
+        self.ContentFrame.Size = UDim2.new(1, 0, 1, -54)
     end
 
-    if not self.Config.BottomTabs then
-        for _, tab in ipairs(self.Tabs) do
-            if breakpoint == "Mobile" then
-                tab.Button.Size = UDim2.fromOffset(110, 38)
-                if tab.TextLabel then tab.TextLabel.Visible = true end
-                if tab.IconLabel then
-                    tab.IconLabel.Position = UDim2.new(0, 10, 0.5, -7)
-                end
-            elseif twoSides then
-                -- Botão quadrado, icon centralizado, sem texto
-                tab.Button.Size = UDim2.new(1, 0, 0, 38)
-                if tab.TextLabel then tab.TextLabel.Visible = false end
-                if tab.IconLabel then
-                    local s = tab.IconLabel.Size.X.Offset or 15
-                    tab.IconLabel.Position = UDim2.new(0.5, -math.floor(s / 2), 0.5, -math.floor(s / 2))
-                end
-            else
-                tab.Button.Size = UDim2.new(1, 0, 0, 38)
-                if tab.TextLabel then tab.TextLabel.Visible = true end
-                if tab.IconLabel then
-                    tab.IconLabel.Position = UDim2.new(0, 10, 0.5, -7)
-                end
+    for _, tab in ipairs(self.Tabs) do
+        if breakpoint == "Mobile" then
+            tab.Button.Size = UDim2.fromOffset(110, 38)
+            if tab.TextLabel then tab.TextLabel.Visible = true end
+            if tab.IconLabel then
+                tab.IconLabel.Position = UDim2.new(0, 10, 0.5, -7)
+            end
+        elseif twoSides then
+            -- Botão quadrado, icon centralizado, sem texto
+            tab.Button.Size = UDim2.new(1, 0, 0, 38)
+            if tab.TextLabel then tab.TextLabel.Visible = false end
+            if tab.IconLabel then
+                local s = tab.IconLabel.Size.X.Offset or 15
+                tab.IconLabel.Position = UDim2.new(0.5, -math.floor(s / 2), 0.5, -math.floor(s / 2))
+            end
+        else
+            tab.Button.Size = UDim2.fromOffset(110, 38)
+            if tab.TextLabel then tab.TextLabel.Visible = true end
+            if tab.IconLabel then
+                tab.IconLabel.Position = UDim2.new(0, 10, 0.5, -7)
             end
         end
     end
@@ -724,7 +632,7 @@ function WindowClass:_createFloatingButton()
     })
     New("UICorner", {
         Parent = glow,
-        CornerRadius = UDim.new(cornerScale, 0)
+        CornerRadius = UDim.new(0, 0)
     })
 
     local buttonFrame = New("Frame", {
@@ -736,7 +644,7 @@ function WindowClass:_createFloatingButton()
     })
     New("UICorner", {
         Parent = buttonFrame,
-        CornerRadius = UDim.new(cornerScale, 0)
+        CornerRadius = UDim.new(0, 0)
     })
     MakeGradient(buttonFrame, self.Theme.SurfaceAlt, self.Theme.Surface, 90)
     local stroke = MakeStroke(buttonFrame, self.Theme.Primary, 1, 0.6)
@@ -2187,22 +2095,6 @@ function WindowClass:SetTheme(themeInput)
     end
 end
 
-function WindowClass:SetBackgroundImage(imageId, transparency)
-    self.Config.BackgroundImage = imageId or ""
-    local t = transparency or self.Config.BackgroundImageTransparency or 0.4
-    self.Config.BackgroundImageTransparency = t
-
-    if self.BackgroundImageLabel then
-        if imageId and imageId ~= "" then
-            self.BackgroundImageLabel.Image = imageId
-            self.BackgroundImageLabel.ImageTransparency = t
-            self.BackgroundImageLabel.Visible = true
-        else
-            self.BackgroundImageLabel.Visible = false
-        end
-    end
-end
-
 local function CreateWindowShell(window)
     local theme = window.Theme
 
@@ -2230,7 +2122,7 @@ local function CreateWindowShell(window)
         BackgroundColor3 = theme.Shadow,
         BackgroundTransparency = 0.7
     })
-    MakeCorner(shadow, 4)
+    MakeCorner(shadow, 12)
 
     local frame = New("Frame", {
         Parent = root,
@@ -2241,7 +2133,7 @@ local function CreateWindowShell(window)
         BackgroundTransparency = 0.05,
         ClipsDescendants = true
     })
-    MakeCorner(frame, 4)
+    MakeCorner(frame, 12)
     local scale = New("UIScale", {
         Parent = frame,
         Scale = 1
@@ -2258,22 +2150,6 @@ local function CreateWindowShell(window)
     })
     MakeGradient(acrylic, Color3.fromRGB(255,255,255), Color3.fromRGB(255,255,255), 0)
 
-    -- Custom background image support
-    local bgImageLabel = nil
-    if window.Config.BackgroundImage and window.Config.BackgroundImage ~= "" then
-        bgImageLabel = New("ImageLabel", {
-            Parent = frame,
-            BackgroundTransparency = 1,
-            Size = UDim2.fromScale(1, 1),
-            Image = window.Config.BackgroundImage,
-            ImageTransparency = window.Config.BackgroundImageTransparency or 0.4,
-            ScaleType = Enum.ScaleType.Crop,
-            ZIndex = 1
-        })
-        acrylic.ZIndex = 2
-    end
-    window.BackgroundImageLabel = bgImageLabel
-
     local titleBar = New("Frame", {
         Parent = frame,
         BackgroundTransparency = 1,
@@ -2281,14 +2157,56 @@ local function CreateWindowShell(window)
     })
     MakePadding(titleBar, 14, 14, 10, 8)
 
-    -- Settings button on the TOP LEFT
-    local settingsWrap = New("Frame", {
+    local titleIcon = CreateIcon(titleBar, window.Config.Icon or "panel", theme.Primary, 32, 0)
+    if titleIcon then
+        titleIcon.Position = UDim2.new(0, 0, 0.5, -16)
+    end
+
+    local titleX = titleIcon and 44 or 0
+
+    local titleLabel = New("TextLabel", {
         Parent = titleBar,
-        BackgroundColor3 = theme.SurfaceAlt,
-        Size = UDim2.fromOffset(28, 28),
-        Position = UDim2.new(0, 0, 0.5, -14)
+        BackgroundTransparency = 1,
+        Position = UDim2.fromOffset(titleX, 0),
+        Size = UDim2.new(1, -100 - titleX, 0, 18),
+        Text = window.Config.Title or "SpectrumX",
+        Font = Enum.Font.GothamSemibold,
+        TextSize = 15,
+        TextColor3 = theme.Text,
+        TextXAlignment = Enum.TextXAlignment.Left
     })
-    MakeCorner(settingsWrap, 6)
+
+    local subtitleLabel = New("TextLabel", {
+        Parent = titleBar,
+        BackgroundTransparency = 1,
+        Position = UDim2.fromOffset(titleX, 18),
+        Size = UDim2.new(1, -100 - titleX, 0, 14),
+        Text = window.Config.Subtitle or "",
+        Font = Enum.Font.Gotham,
+        TextSize = 11,
+        TextColor3 = theme.TextDim,
+        TextXAlignment = Enum.TextXAlignment.Left
+    })
+
+    local controls = New("Frame", {
+        Parent = titleBar,
+        BackgroundTransparency = 1,
+        AnchorPoint = Vector2.new(1, 0.5),
+        Position = UDim2.new(1, 0, 0.5, 0),
+        Size = UDim2.fromOffset(104, 28)
+    })
+
+    local controlsList = MakeList(controls, Enum.FillDirection.Horizontal, 8)
+    controlsList.HorizontalAlignment = Enum.HorizontalAlignment.Right
+    controlsList.VerticalAlignment = Enum.VerticalAlignment.Center
+
+    -- Botão de settings
+    local settingsWrap = New("Frame", {
+        Parent = controls,
+        BackgroundColor3 = theme.SurfaceAlt,
+        Size = UDim2.fromOffset(28, 28)
+    })
+    MakeCorner(settingsWrap, 8)
     MakeStroke(settingsWrap, theme.Border, 1, 0)
 
     local settingsBtn = New("TextButton", {
@@ -2319,50 +2237,6 @@ local function CreateWindowShell(window)
             TextColor3 = theme.TextMuted
         })
     end
-
-    -- Title icon shifted right to make room for settings button (28px + 8px gap = 36px)
-    local titleIcon = CreateIcon(titleBar, window.Config.Icon or "panel", theme.Primary, 32, 36)
-    if titleIcon then
-        titleIcon.Position = UDim2.new(0, 36, 0.5, -16)
-    end
-
-    local titleX = titleIcon and 80 or 36
-
-    local titleLabel = New("TextLabel", {
-        Parent = titleBar,
-        BackgroundTransparency = 1,
-        Position = UDim2.fromOffset(titleX, 0),
-        Size = UDim2.new(1, -72 - titleX, 0, 18),
-        Text = window.Config.Title or "SpectrumX",
-        Font = Enum.Font.GothamSemibold,
-        TextSize = 15,
-        TextColor3 = theme.Text,
-        TextXAlignment = Enum.TextXAlignment.Left
-    })
-
-    local subtitleLabel = New("TextLabel", {
-        Parent = titleBar,
-        BackgroundTransparency = 1,
-        Position = UDim2.fromOffset(titleX, 18),
-        Size = UDim2.new(1, -72 - titleX, 0, 14),
-        Text = window.Config.Subtitle or "",
-        Font = Enum.Font.Gotham,
-        TextSize = 11,
-        TextColor3 = theme.TextDim,
-        TextXAlignment = Enum.TextXAlignment.Left
-    })
-
-    local controls = New("Frame", {
-        Parent = titleBar,
-        BackgroundTransparency = 1,
-        AnchorPoint = Vector2.new(1, 0.5),
-        Position = UDim2.new(1, 0, 0.5, 0),
-        Size = UDim2.fromOffset(68, 28)
-    })
-
-    local controlsList = MakeList(controls, Enum.FillDirection.Horizontal, 8)
-    controlsList.HorizontalAlignment = Enum.HorizontalAlignment.Right
-    controlsList.VerticalAlignment = Enum.VerticalAlignment.Center
 
     local minimizeWrap = New("Frame", {
         Parent = controls,
@@ -2415,86 +2289,38 @@ local function CreateWindowShell(window)
         Size = UDim2.new(1, 0, 1, -53)
     })
 
-    local TAB_BAR_H = 46
+    local bodyList = MakeList(body, Enum.FillDirection.Horizontal, 0)
 
-    local bodyList, tabsFrame, tabsScroll, tabsList, contentFrame, contentPages
+    local tabsFrame = New("Frame", {
+        Parent = body,
+        BackgroundTransparency = 1,
+        Size = UDim2.new(0, window.Config.TabWidth, 1, 0),
+        LayoutOrder = 2
+    })
 
-    if window.Config.BottomTabs then
-        -- ── BOTTOM TABS LAYOUT ──
-        -- Content fills top, tab bar is pinned to bottom
-        bodyList = MakeList(body, Enum.FillDirection.Vertical, 0)
+    local tabsScroll = New("ScrollingFrame", {
+        Parent = tabsFrame,
+        BackgroundTransparency = 1,
+        BorderSizePixel = 0,
+        Size = UDim2.fromScale(1, 1),
+        CanvasSize = UDim2.new(),
+        AutomaticCanvasSize = Enum.AutomaticSize.Y,
+        ScrollBarThickness = 2,
+        ScrollBarImageColor3 = theme.Border,
+        ElasticBehavior = Enum.ElasticBehavior.Never,
+        ScrollingDirection = Enum.ScrollingDirection.Y
+    })
+    MakePadding(tabsScroll, 10, 10, 10, 10)
+    local tabsList = MakeList(tabsScroll, Enum.FillDirection.Vertical, 8)
 
-        contentFrame = New("Frame", {
-            Parent = body,
-            BackgroundTransparency = 1,
-            Size = UDim2.new(1, 0, 1, -TAB_BAR_H)
-        })
+    local contentFrame = New("Frame", {
+        Parent = body,
+        BackgroundTransparency = 1,
+        Size = UDim2.new(1, -window.Config.TabWidth, 1, 0),
+        LayoutOrder = 1
+    })
 
-        tabsFrame = New("Frame", {
-            Parent = body,
-            BackgroundColor3 = theme.Surface,
-            BackgroundTransparency = 0,
-            BorderSizePixel = 0,
-            Size = UDim2.new(1, 0, 0, TAB_BAR_H)
-        })
-        -- top divider line on the tab bar
-        New("Frame", {
-            Parent = tabsFrame,
-            BackgroundColor3 = theme.Primary,
-            BackgroundTransparency = 0.6,
-            BorderSizePixel = 0,
-            Size = UDim2.new(1, 0, 0, 1)
-        })
-
-        tabsScroll = New("ScrollingFrame", {
-            Parent = tabsFrame,
-            BackgroundTransparency = 1,
-            BorderSizePixel = 0,
-            Position = UDim2.fromOffset(0, 1),
-            Size = UDim2.new(1, 0, 1, -1),
-            CanvasSize = UDim2.new(),
-            AutomaticCanvasSize = Enum.AutomaticSize.X,
-            ScrollBarThickness = 0,
-            ElasticBehavior = Enum.ElasticBehavior.Never,
-            ScrollingDirection = Enum.ScrollingDirection.X
-        })
-        MakePadding(tabsScroll, 6, 6, 4, 4)
-        tabsList = MakeList(tabsScroll, Enum.FillDirection.Horizontal, 0)
-        tabsList.HorizontalAlignment = Enum.HorizontalAlignment.Center
-        tabsList.VerticalAlignment = Enum.VerticalAlignment.Center
-    else
-        -- ── SIDE TABS LAYOUT (default) ──
-        bodyList = MakeList(body, Enum.FillDirection.Horizontal, 0)
-
-        tabsFrame = New("Frame", {
-            Parent = body,
-            BackgroundTransparency = 1,
-            Size = UDim2.new(0, window.Config.TabWidth, 1, 0)
-        })
-
-        tabsScroll = New("ScrollingFrame", {
-            Parent = tabsFrame,
-            BackgroundTransparency = 1,
-            BorderSizePixel = 0,
-            Size = UDim2.fromScale(1, 1),
-            CanvasSize = UDim2.new(),
-            AutomaticCanvasSize = Enum.AutomaticSize.Y,
-            ScrollBarThickness = 2,
-            ScrollBarImageColor3 = theme.Border,
-            ElasticBehavior = Enum.ElasticBehavior.Never,
-            ScrollingDirection = Enum.ScrollingDirection.Y
-        })
-        MakePadding(tabsScroll, 10, 10, 10, 10)
-        tabsList = MakeList(tabsScroll, Enum.FillDirection.Vertical, 8)
-
-        contentFrame = New("Frame", {
-            Parent = body,
-            BackgroundTransparency = 1,
-            Size = UDim2.new(1, -window.Config.TabWidth, 1, 0)
-        })
-    end
-
-    contentPages = New("Frame", {
+    local contentPages = New("Frame", {
         Parent = contentFrame,
         BackgroundTransparency = 1,
         Size = UDim2.fromScale(1, 1)
@@ -2548,323 +2374,49 @@ local function CreateWindowShell(window)
         Tween(closeWrap, 0.14, {BackgroundColor3 = theme.SurfaceAlt})
     end)
 
-    -- Painel de configurações da UI (opens from top-left settings button)
+    -- Painel de configurações da UI
     local settingsPanel = New("Frame", {
         Parent = frame,
         BackgroundColor3 = theme.Surface,
         BackgroundTransparency = 0,
-        AnchorPoint = Vector2.new(0, 0),
-        Position = UDim2.fromOffset(14, 58),
-        Size = UDim2.fromOffset(240, 0),
+        AnchorPoint = Vector2.new(1, 0),
+        Position = UDim2.new(1, -10, 0, 58),
+        Size = UDim2.fromOffset(220, 0),
         AutomaticSize = Enum.AutomaticSize.Y,
         ClipsDescendants = false,
         Visible = false,
         ZIndex = 20
     })
-    MakeCorner(settingsPanel, 8)
+    MakeCorner(settingsPanel, 10)
     MakeStroke(settingsPanel, theme.Border, 1, 0)
-    MakePadding(settingsPanel, 12, 12, 10, 12)
+    MakePadding(settingsPanel, 12, 12, 10, 10)
 
     local panelShadow = New("Frame", {
         Parent = frame,
         BackgroundColor3 = theme.Shadow,
         BackgroundTransparency = 0.6,
-        AnchorPoint = Vector2.new(0, 0),
-        Position = UDim2.fromOffset(16, 62),
-        Size = UDim2.fromOffset(240, 0),
+        AnchorPoint = Vector2.new(1, 0),
+        Position = UDim2.new(1, -8, 0, 62),
+        Size = UDim2.fromOffset(220, 0),
         AutomaticSize = Enum.AutomaticSize.Y,
         Visible = false,
         ZIndex = 19
     })
-    MakeCorner(panelShadow, 8)
+    MakeCorner(panelShadow, 10)
 
     local panelList = MakeList(settingsPanel, Enum.FillDirection.Vertical, 8)
 
-    -- Header
     New("TextLabel", {
         Parent = settingsPanel,
         BackgroundTransparency = 1,
         Size = UDim2.new(1, 0, 0, 16),
-        Text = "UI Settings",
+        Text = "Configurações",
         Font = Enum.Font.GothamSemibold,
         TextSize = 13,
         TextColor3 = theme.TextDim,
         TextXAlignment = Enum.TextXAlignment.Left
     })
 
-    New("Frame", {
-        Parent = settingsPanel,
-        BackgroundColor3 = theme.Border,
-        BorderSizePixel = 0,
-        Size = UDim2.new(1, 0, 0, 1)
-    })
-
-    -- ── THEMES SECTION ──
-    New("TextLabel", {
-        Parent = settingsPanel,
-        BackgroundTransparency = 1,
-        Size = UDim2.new(1, 0, 0, 14),
-        Text = "Theme",
-        Font = Enum.Font.GothamMedium,
-        TextSize = 11,
-        TextColor3 = theme.TextDim,
-        TextXAlignment = Enum.TextXAlignment.Left
-    })
-
-    local themeRow = New("Frame", {
-        Parent = settingsPanel,
-        BackgroundColor3 = theme.SurfaceAlt,
-        Size = UDim2.new(1, 0, 0, 40)
-    })
-    MakeCorner(themeRow, 8)
-    MakeStroke(themeRow, theme.Border, 1, 0)
-    MakePadding(themeRow, 8, 8, 0, 0)
-    local themeList = MakeList(themeRow, Enum.FillDirection.Horizontal, 6)
-    themeList.VerticalAlignment = Enum.VerticalAlignment.Center
-
-    local themeColors = {
-        { name = "Dark",    color = Color3.fromRGB(124, 58, 237) },
-        { name = "Crimson", color = Color3.fromRGB(220, 38, 38)  },
-        { name = "Ocean",   color = Color3.fromRGB(56, 189, 248) },
-        { name = "Forest",  color = Color3.fromRGB(34, 197, 94)  },
-        { name = "Violet",  color = Color3.fromRGB(167, 139, 250)},
-    }
-
-    for _, td in ipairs(themeColors) do
-        local dot = New("Frame", {
-            Parent = themeRow,
-            BackgroundColor3 = td.color,
-            Size = UDim2.fromOffset(22, 22)
-        })
-        MakeCorner(dot, 999)
-        local dotBtn = New("TextButton", {
-            Parent = dot,
-            BackgroundTransparency = 1,
-            Size = UDim2.fromScale(1, 1),
-            Text = ""
-        })
-        local dotStroke = MakeStroke(dot, Color3.fromRGB(255,255,255), 1.5, 1)
-
-        -- Highlight current theme
-        if window.Config.Theme == td.name then
-            dotStroke.Transparency = 0
-        end
-
-        dotBtn.MouseButton1Click:Connect(function()
-            window.Config.Theme = td.name
-            window:SetTheme(td.name)
-            -- Update all dot strokes
-            for _, c in ipairs(themeRow:GetChildren()) do
-                if c:IsA("Frame") then
-                    local s = c:FindFirstChildOfClass("UIStroke")
-                    if s then s.Transparency = 1 end
-                end
-            end
-            dotStroke.Transparency = 0
-        end)
-
-        dotBtn.MouseEnter:Connect(function()
-            Tween(dot, 0.12, {Size = UDim2.fromOffset(24, 24)})
-        end)
-        dotBtn.MouseLeave:Connect(function()
-            Tween(dot, 0.12, {Size = UDim2.fromOffset(22, 22)})
-        end)
-    end
-
-    -- ── DISCORD LINK ──
-    if window.Config.DiscordLink and window.Config.DiscordLink ~= "" then
-        New("TextLabel", {
-            Parent = settingsPanel,
-            BackgroundTransparency = 1,
-            Size = UDim2.new(1, 0, 0, 14),
-            Text = "Discord",
-            Font = Enum.Font.GothamMedium,
-            TextSize = 11,
-            TextColor3 = theme.TextDim,
-            TextXAlignment = Enum.TextXAlignment.Left
-        })
-
-        local discordRow = New("Frame", {
-            Parent = settingsPanel,
-            BackgroundColor3 = theme.SurfaceAlt,
-            Size = UDim2.new(1, 0, 0, 36)
-        })
-        MakeCorner(discordRow, 8)
-        MakeStroke(discordRow, theme.Border, 1, 0)
-
-        New("TextLabel", {
-            Parent = discordRow,
-            BackgroundTransparency = 1,
-            Position = UDim2.fromOffset(10, 0),
-            Size = UDim2.new(1, -80, 1, 0),
-            Text = window.Config.DiscordLink,
-            Font = Enum.Font.Gotham,
-            TextSize = 11,
-            TextColor3 = theme.TextDim,
-            TextXAlignment = Enum.TextXAlignment.Left,
-            TextTruncate = Enum.TextTruncate.AtEnd
-        })
-
-        local copyBtn = New("TextButton", {
-            Parent = discordRow,
-            BackgroundColor3 = theme.Primary,
-            AnchorPoint = Vector2.new(1, 0.5),
-            Position = UDim2.new(1, -8, 0.5, 0),
-            Size = UDim2.fromOffset(56, 22),
-            Text = "Copy",
-            Font = Enum.Font.GothamSemibold,
-            TextSize = 11,
-            TextColor3 = Color3.fromRGB(255, 255, 255)
-        })
-        MakeCorner(copyBtn, 5)
-
-        copyBtn.MouseButton1Click:Connect(function()
-            pcall(function()
-                setclipboard(window.Config.DiscordLink)
-            end)
-            copyBtn.Text = "Copied!"
-            task.delay(1.5, function()
-                if copyBtn and copyBtn.Parent then
-                    copyBtn.Text = "Copy"
-                end
-            end)
-        end)
-    end
-
-    -- ── OPEN BUTTON TOGGLE ──
-    New("TextLabel", {
-        Parent = settingsPanel,
-        BackgroundTransparency = 1,
-        Size = UDim2.new(1, 0, 0, 14),
-        Text = "Behaviour",
-        Font = Enum.Font.GothamMedium,
-        TextSize = 11,
-        TextColor3 = theme.TextDim,
-        TextXAlignment = Enum.TextXAlignment.Left
-    })
-
-    -- Row: Show Open Button (float button)
-    local floatRow = New("Frame", {
-        Parent = settingsPanel,
-        BackgroundColor3 = theme.SurfaceAlt,
-        Size = UDim2.new(1, 0, 0, 36)
-    })
-    MakeCorner(floatRow, 8)
-    MakeStroke(floatRow, theme.Border, 1, 0)
-
-    New("TextLabel", {
-        Parent = floatRow,
-        BackgroundTransparency = 1,
-        Position = UDim2.fromOffset(10, 0),
-        Size = UDim2.new(1, -60, 1, 0),
-        Text = "Show Open Button",
-        Font = Enum.Font.GothamMedium,
-        TextSize = 12,
-        TextColor3 = theme.Text,
-        TextXAlignment = Enum.TextXAlignment.Left
-    })
-
-    local floatState = not window.Settings.FloatHidden
-    local floatToggleSwitch = New("Frame", {
-        Parent = floatRow,
-        AnchorPoint = Vector2.new(1, 0.5),
-        Position = UDim2.new(1, -10, 0.5, 0),
-        Size = UDim2.fromOffset(36, 18),
-        BackgroundColor3 = floatState and theme.Primary or theme.SurfaceLight
-    })
-    MakeCorner(floatToggleSwitch, 999)
-    MakeStroke(floatToggleSwitch, theme.Border, 1, 0)
-
-    local floatKnob = New("Frame", {
-        Parent = floatToggleSwitch,
-        Size = UDim2.fromOffset(14, 14),
-        Position = floatState and UDim2.fromOffset(20, 2) or UDim2.fromOffset(2, 2),
-        BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    })
-    MakeCorner(floatKnob, 999)
-
-    local floatClick = New("TextButton", {
-        Parent = floatRow,
-        BackgroundTransparency = 1,
-        Size = UDim2.fromScale(1, 1),
-        Text = ""
-    })
-
-    floatClick.MouseButton1Click:Connect(function()
-        floatState = not floatState
-        window.Settings.FloatHidden = not floatState
-        Library.GlobalSettings.FloatHidden = window.Settings.FloatHidden
-        Tween(floatToggleSwitch, 0.16, {
-            BackgroundColor3 = floatState and window.Theme.Primary or window.Theme.SurfaceLight
-        })
-        Tween(floatKnob, 0.16, {
-            Position = floatState and UDim2.fromOffset(20, 2) or UDim2.fromOffset(2, 2)
-        })
-        if window.FloatingButton then
-            window.FloatingButton.Visible = floatState
-        end
-    end)
-
-    -- Row: UI Enable/Disable
-    local uiEnableRow = New("Frame", {
-        Parent = settingsPanel,
-        BackgroundColor3 = theme.SurfaceAlt,
-        Size = UDim2.new(1, 0, 0, 36)
-    })
-    MakeCorner(uiEnableRow, 8)
-    MakeStroke(uiEnableRow, theme.Border, 1, 0)
-
-    New("TextLabel", {
-        Parent = uiEnableRow,
-        BackgroundTransparency = 1,
-        Position = UDim2.fromOffset(10, 0),
-        Size = UDim2.new(1, -60, 1, 0),
-        Text = "UI Enabled",
-        Font = Enum.Font.GothamMedium,
-        TextSize = 12,
-        TextColor3 = theme.Text,
-        TextXAlignment = Enum.TextXAlignment.Left
-    })
-
-    local uiEnableState = true
-    local uiEnableSwitch = New("Frame", {
-        Parent = uiEnableRow,
-        AnchorPoint = Vector2.new(1, 0.5),
-        Position = UDim2.new(1, -10, 0.5, 0),
-        Size = UDim2.fromOffset(36, 18),
-        BackgroundColor3 = theme.Primary
-    })
-    MakeCorner(uiEnableSwitch, 999)
-    MakeStroke(uiEnableSwitch, theme.Border, 1, 0)
-
-    local uiEnableKnob = New("Frame", {
-        Parent = uiEnableSwitch,
-        Size = UDim2.fromOffset(14, 14),
-        Position = UDim2.fromOffset(20, 2),
-        BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    })
-    MakeCorner(uiEnableKnob, 999)
-
-    local uiEnableClick = New("TextButton", {
-        Parent = uiEnableRow,
-        BackgroundTransparency = 1,
-        Size = UDim2.fromScale(1, 1),
-        Text = ""
-    })
-
-    uiEnableClick.MouseButton1Click:Connect(function()
-        uiEnableState = not uiEnableState
-        Tween(uiEnableSwitch, 0.16, {
-            BackgroundColor3 = uiEnableState and window.Theme.Primary or window.Theme.SurfaceLight
-        })
-        Tween(uiEnableKnob, 0.16, {
-            Position = uiEnableState and UDim2.fromOffset(20, 2) or UDim2.fromOffset(2, 2)
-        })
-        window.Frame.Visible = uiEnableState
-        window.Shadow.Visible = uiEnableState
-    end)
-
-    -- ── MISC SECTION ──
     New("Frame", {
         Parent = settingsPanel,
         BackgroundColor3 = theme.Border,
@@ -2932,7 +2484,68 @@ local function CreateWindowShell(window)
         end)
     end)
 
-    -- Row: UI Transparency
+    -- Row: Hide FloatButton
+    local floatRow = New("Frame", {
+        Parent = settingsPanel,
+        BackgroundColor3 = theme.SurfaceAlt,
+        Size = UDim2.new(1, 0, 0, 36)
+    })
+    MakeCorner(floatRow, 8)
+    MakeStroke(floatRow, theme.Border, 1, 0)
+
+    New("TextLabel", {
+        Parent = floatRow,
+        BackgroundTransparency = 1,
+        Position = UDim2.fromOffset(10, 0),
+        Size = UDim2.new(1, -60, 1, 0),
+        Text = "Hide Float Button",
+        Font = Enum.Font.GothamMedium,
+        TextSize = 12,
+        TextColor3 = theme.Text,
+        TextXAlignment = Enum.TextXAlignment.Left
+    })
+
+    local floatToggleSwitch = New("Frame", {
+        Parent = floatRow,
+        AnchorPoint = Vector2.new(1, 0.5),
+        Position = UDim2.new(1, -10, 0.5, 0),
+        Size = UDim2.fromOffset(36, 18),
+        BackgroundColor3 = window.Settings.FloatHidden and theme.Primary or theme.SurfaceLight
+    })
+    MakeCorner(floatToggleSwitch, 999)
+    MakeStroke(floatToggleSwitch, theme.Border, 1, 0)
+
+    local floatKnob = New("Frame", {
+        Parent = floatToggleSwitch,
+        Size = UDim2.fromOffset(14, 14),
+        Position = window.Settings.FloatHidden and UDim2.fromOffset(20, 2) or UDim2.fromOffset(2, 2),
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    })
+    MakeCorner(floatKnob, 999)
+
+    local floatClick = New("TextButton", {
+        Parent = floatRow,
+        BackgroundTransparency = 1,
+        Size = UDim2.fromScale(1, 1),
+        Text = ""
+    })
+
+    floatClick.MouseButton1Click:Connect(function()
+        window.Settings.FloatHidden = not window.Settings.FloatHidden
+        Library.GlobalSettings.FloatHidden = window.Settings.FloatHidden
+        local hidden = window.Settings.FloatHidden
+        Tween(floatToggleSwitch, 0.16, {
+            BackgroundColor3 = hidden and theme.Primary or theme.SurfaceLight
+        })
+        Tween(floatKnob, 0.16, {
+            Position = hidden and UDim2.fromOffset(20, 2) or UDim2.fromOffset(2, 2)
+        })
+        if window.FloatingButton then
+            window.FloatingButton.Visible = not hidden
+        end
+    end)
+
+    -- Row: Transparência da UI
     local alphaRow = New("Frame", {
         Parent = settingsPanel,
         BackgroundColor3 = theme.SurfaceAlt,
@@ -2946,7 +2559,7 @@ local function CreateWindowShell(window)
         BackgroundTransparency = 1,
         Position = UDim2.fromOffset(10, 6),
         Size = UDim2.new(1, -60, 0, 14),
-        Text = "Transparency",
+        Text = "Transparência",
         Font = Enum.Font.GothamMedium,
         TextSize = 12,
         TextColor3 = theme.Text,
@@ -3210,10 +2823,6 @@ function Library:CreateWindow(options)
         Draggable = true,
         Resizable = true,
         TwoSides = false,
-        DiscordLink = "",
-        BackgroundImage = "",
-        BackgroundImageTransparency = 0.4,
-        BottomTabs = false,
         FloatingButton = {
             Enabled = true,
             Icon = "lucide-spectrumx",
