@@ -61,8 +61,25 @@ pcall(function()
     end
 end)
 
-local IconMap = {}
--- All icons resolved via LucideAssets only (no emoji fallbacks)
+local IconMap = {
+    home = "⌂",
+    settings = "⚙",
+    menu = "☰",
+    user = "👤",
+    search = "⌕",
+    bell = "🔔",
+    info = "ⓘ",
+    star = "★",
+    folder = "🗀",
+    shield = "🛡",
+    zap = "⚡",
+    play = "▶",
+    terminal = ">_",
+    grid = "☷",
+    sliders = "≡",
+    toolbox = "🧰",
+    panel = "▣"
+}
 
 local function cloneTable(tbl)
     local new = {}
@@ -480,14 +497,22 @@ function WindowClass:_applyResponsive()
     local tabW = twoSides and 48 or self.Config.TabWidth
 
     if breakpoint == "Mobile" then
-        self.ContentFrame.Size = UDim2.fromScale(1, 1)
+        self.BodyList.FillDirection = Enum.FillDirection.Vertical
+        self.TabsFrame.Size = UDim2.new(1, 0, 0, 54)
+        self.TabsList.FillDirection = Enum.FillDirection.Horizontal
+        self.TabsList.Padding = UDim.new(0, 8)
+        self.ContentFrame.Size = UDim2.new(1, 0, 1, -54)
     else
-        self.ContentFrame.Size = UDim2.fromScale(1, 1)
+        self.BodyList.FillDirection = Enum.FillDirection.Horizontal
+        self.TabsFrame.Size = UDim2.new(0, tabW, 1, 0)
+        self.TabsList.FillDirection = Enum.FillDirection.Vertical
+        self.TabsList.Padding = UDim.new(0, 8)
+        self.ContentFrame.Size = UDim2.new(1, -tabW, 1, 0)
     end
 
     for _, tab in ipairs(self.Tabs) do
         if breakpoint == "Mobile" then
-            tab.Button.Size = UDim2.fromOffset(110, 32)
+            tab.Button.Size = UDim2.fromOffset(110, 38)
             if tab.TextLabel then tab.TextLabel.Visible = true end
             if tab.IconLabel then
                 tab.IconLabel.Position = UDim2.new(0, 10, 0.5, -7)
@@ -501,7 +526,7 @@ function WindowClass:_applyResponsive()
                 tab.IconLabel.Position = UDim2.new(0.5, -math.floor(s / 2), 0.5, -math.floor(s / 2))
             end
         else
-            tab.Button.Size = UDim2.fromOffset(110, 32)
+            tab.Button.Size = UDim2.new(1, 0, 0, 38)
             if tab.TextLabel then tab.TextLabel.Visible = true end
             if tab.IconLabel then
                 tab.IconLabel.Position = UDim2.new(0, 10, 0.5, -7)
@@ -514,10 +539,6 @@ function WindowClass:SetVisible(state)
     self.Visible = state
 
     local savedAlpha = (self.Settings and self.Settings.Transparency) or 0.05
-
-    if self.TabsFrame then
-        self.TabsFrame.Visible = state
-    end
 
     if state then
         self.Frame.Visible = true
@@ -1425,9 +1446,9 @@ function SectionClass:AddSlider(options)
     local knob = New("Frame", {
         Parent = bar,
         AnchorPoint = Vector2.new(0.5, 0.5),
-        Size = UDim2.fromOffset(0, 0),
+        Size = UDim2.fromOffset(14, 14),
         Position = UDim2.new(0, 0, 0.5, 0),
-        BackgroundTransparency = 1
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     })
     MakeCorner(knob, 999)
 
@@ -2129,20 +2150,6 @@ local function CreateWindowShell(window)
     })
     MakeGradient(acrylic, Color3.fromRGB(255,255,255), Color3.fromRGB(255,255,255), 0)
 
-    -- Background image layer (optional asset ID)
-    local bgImage = nil
-    if window.Config.BackgroundImage and window.Config.BackgroundImage ~= "" then
-        bgImage = New("ImageLabel", {
-            Parent = frame,
-            BackgroundTransparency = 1,
-            Size = UDim2.fromScale(1, 1),
-            Image = window.Config.BackgroundImage,
-            ImageTransparency = window.Config.BackgroundImageTransparency or 0.5,
-            ScaleType = Enum.ScaleType.Crop,
-            ZIndex = 2
-        })
-    end
-
     local titleBar = New("Frame", {
         Parent = frame,
         BackgroundTransparency = 1,
@@ -2282,48 +2289,33 @@ local function CreateWindowShell(window)
         Size = UDim2.new(1, 0, 1, -53)
     })
 
-    local bodyList = MakeList(body, Enum.FillDirection.Vertical, 0)
+    local bodyList = MakeList(body, Enum.FillDirection.Horizontal, 0)
 
-    -- Floating tab bar — separate from window, positioned below it
     local tabsFrame = New("Frame", {
-        Parent = root,
-        BackgroundColor3 = theme.Surface,
-        BackgroundTransparency = 0,
-        BorderSizePixel = 0,
-        Size = UDim2.fromOffset(window.Config.Size.X.Offset, 44),
-        ZIndex = 5
+        Parent = body,
+        BackgroundTransparency = 1,
+        Size = UDim2.new(0, window.Config.TabWidth, 1, 0)
     })
-    MakeCorner(tabsFrame, 10)
-    MakeStroke(tabsFrame, theme.Border, 1, 0)
 
     local tabsScroll = New("ScrollingFrame", {
         Parent = tabsFrame,
         BackgroundTransparency = 1,
         BorderSizePixel = 0,
-        AnchorPoint = Vector2.new(0.5, 0.5),
-        Position = UDim2.new(0.5, 0, 0.5, 0),
-        Size = UDim2.new(1, -16, 1, -8),
+        Size = UDim2.fromScale(1, 1),
         CanvasSize = UDim2.new(),
-        AutomaticCanvasSize = Enum.AutomaticSize.X,
-        ScrollBarThickness = 0,
+        AutomaticCanvasSize = Enum.AutomaticSize.Y,
+        ScrollBarThickness = 2,
+        ScrollBarImageColor3 = theme.Border,
         ElasticBehavior = Enum.ElasticBehavior.Never,
-        ScrollingDirection = Enum.ScrollingDirection.X,
-        ZIndex = 5
+        ScrollingDirection = Enum.ScrollingDirection.Y
     })
-    local tabsList = New("UIListLayout", {
-        Parent = tabsScroll,
-        FillDirection = Enum.FillDirection.Horizontal,
-        Padding = UDim.new(0, 6),
-        SortOrder = Enum.SortOrder.LayoutOrder,
-        HorizontalAlignment = Enum.HorizontalAlignment.Center,
-        VerticalAlignment = Enum.VerticalAlignment.Center
-    })
+    MakePadding(tabsScroll, 10, 10, 10, 10)
+    local tabsList = MakeList(tabsScroll, Enum.FillDirection.Vertical, 8)
 
-    -- Content fills full body height (tabs are detached)
     local contentFrame = New("Frame", {
         Parent = body,
         BackgroundTransparency = 1,
-        Size = UDim2.fromScale(1, 1)
+        Size = UDim2.new(1, -window.Config.TabWidth, 1, 0)
     })
 
     local contentPages = New("Frame", {
@@ -2331,18 +2323,6 @@ local function CreateWindowShell(window)
         BackgroundTransparency = 1,
         Size = UDim2.fromScale(1, 1)
     })
-
-    -- Keep tab bar in sync with window position/size
-    -- Tab bar is 80% of window width, centered, 12px below window
-    local function SyncTabBar()
-        local ap = frame.AbsolutePosition
-        local as = frame.AbsoluteSize
-        local tbW = math.floor(as.X * 0.80)
-        local tbX = ap.X + math.floor((as.X - tbW) / 2)
-        local tbY = ap.Y + as.Y + 12
-        tabsFrame.Position = UDim2.fromOffset(tbX, tbY)
-        tabsFrame.Size = UDim2.fromOffset(tbW, 44)
-    end
 
     window.Gui = gui
     window.Root = root
@@ -2352,7 +2332,6 @@ local function CreateWindowShell(window)
     window.WindowGradient = gradient
     window.MainStroke = stroke
     window.Acrylic = acrylic
-    window.BgImage = bgImage
     window.TitleBar = titleBar
     window.TitleLabel = titleLabel
     window.SubtitleLabel = subtitleLabel
@@ -2697,7 +2676,6 @@ local function CreateWindowShell(window)
                 pos.X.Scale, pos.X.Offset,
                 pos.Y.Scale, pos.Y.Offset + 4
             )
-            SyncTabBar()
         end)
     end
 
@@ -2706,18 +2684,15 @@ local function CreateWindowShell(window)
             frame.Position.X.Scale, frame.Position.X.Offset,
             frame.Position.Y.Scale, frame.Position.Y.Offset + 4
         )
-        SyncTabBar()
     end)
 
     frame:GetPropertyChangedSignal("Size"):Connect(function()
         shadow.Size = frame.Size
-        SyncTabBar()
     end)
 
     window:_createResizeHandle()
     window:_createFloatingButton()
     window:_applyResponsive()
-    task.defer(SyncTabBar)
 
     -- Aplica estado inicial do FloatHidden herdado do GlobalSettings
     if window.Settings.FloatHidden and window.FloatingButton then
@@ -2799,38 +2774,6 @@ function WindowClass:CreateLabel(parent, options)
     end
 end
 
-function WindowClass:SetBackground(assetId, transparency)
-    local frame = self.Frame
-    if not frame then return end
-
-    if self.BgImage then
-        self.BgImage:Destroy()
-        self.BgImage = nil
-    end
-
-    if assetId and assetId ~= "" then
-        local img = New("ImageLabel", {
-            Parent = frame,
-            BackgroundTransparency = 1,
-            Size = UDim2.fromScale(1, 1),
-            Image = assetId,
-            ImageTransparency = transparency or 0.5,
-            ScaleType = Enum.ScaleType.Crop,
-            ZIndex = 2
-        })
-        self.BgImage = img
-        self.Config.BackgroundImage = assetId
-        self.Config.BackgroundImageTransparency = transparency or 0.5
-    end
-end
-
-function WindowClass:SetBackgroundTransparency(transparency)
-    if self.BgImage then
-        self.BgImage.ImageTransparency = math.clamp(transparency or 0.5, 0, 1)
-        self.Config.BackgroundImageTransparency = transparency
-    end
-end
-
 function Library:SetVisible(state)
     for _, window in ipairs(self.Windows) do
         if window and window.SetVisible then
@@ -2878,8 +2821,6 @@ function Library:CreateWindow(options)
         Draggable = true,
         Resizable = true,
         TwoSides = false,
-        BackgroundImage = "",
-        BackgroundImageTransparency = 0.5,
         FloatingButton = {
             Enabled = true,
             Icon = "lucide-spectrumx",
