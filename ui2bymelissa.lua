@@ -498,16 +498,16 @@ function WindowClass:_applyResponsive()
 
     if breakpoint == "Mobile" then
         self.BodyList.FillDirection = Enum.FillDirection.Vertical
-        self.TabsFrame.Size = UDim2.new(1, 0, 0, 54)
+        self.TabsFrame.Size = UDim2.new(1, 0, 0, 44)
         self.TabsList.FillDirection = Enum.FillDirection.Horizontal
-        self.TabsList.Padding = UDim.new(0, 8)
-        self.ContentFrame.Size = UDim2.new(1, 0, 1, -54)
+        self.TabsList.Padding = UDim.new(0, 6)
+        self.ContentFrame.Size = UDim2.new(1, 0, 1, -44)
     else
         self.BodyList.FillDirection = Enum.FillDirection.Vertical
-        self.TabsFrame.Size = UDim2.new(1, 0, 0, 54)
+        self.TabsFrame.Size = UDim2.new(1, 0, 0, 44)
         self.TabsList.FillDirection = Enum.FillDirection.Horizontal
-        self.TabsList.Padding = UDim.new(0, 8)
-        self.ContentFrame.Size = UDim2.new(1, 0, 1, -54)
+        self.TabsList.Padding = UDim.new(0, 6)
+        self.ContentFrame.Size = UDim2.new(1, 0, 1, -44)
     end
 
     for _, tab in ipairs(self.Tabs) do
@@ -1446,9 +1446,9 @@ function SectionClass:AddSlider(options)
     local knob = New("Frame", {
         Parent = bar,
         AnchorPoint = Vector2.new(0.5, 0.5),
-        Size = UDim2.fromOffset(14, 14),
+        Size = UDim2.fromOffset(0, 0),
         Position = UDim2.new(0, 0, 0.5, 0),
-        BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        BackgroundTransparency = 1
     })
     MakeCorner(knob, 999)
 
@@ -2122,7 +2122,7 @@ local function CreateWindowShell(window)
         BackgroundColor3 = theme.Shadow,
         BackgroundTransparency = 0.7
     })
-    MakeCorner(shadow, 12)
+    -- no corner on shadow (rectangular window)
 
     local frame = New("Frame", {
         Parent = root,
@@ -2133,7 +2133,7 @@ local function CreateWindowShell(window)
         BackgroundTransparency = 0.05,
         ClipsDescendants = true
     })
-    MakeCorner(frame, 12)
+    -- no corner on main frame (rectangular window)
     local scale = New("UIScale", {
         Parent = frame,
         Scale = 1
@@ -2301,20 +2301,29 @@ local function CreateWindowShell(window)
     })
     MakeStroke(tabsFrame, theme.Border, 1, 0)
 
+    -- _applyResponsive uses 44px height now
     local tabsScroll = New("ScrollingFrame", {
         Parent = tabsFrame,
         BackgroundTransparency = 1,
         BorderSizePixel = 0,
-        Size = UDim2.fromScale(1, 1),
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        Position = UDim2.new(0.5, 0, 0.5, 0),
+        Size = UDim2.new(1, -20, 1, 0),
         CanvasSize = UDim2.new(),
-        AutomaticCanvasSize = Enum.AutomaticSize.Y,
-        ScrollBarThickness = 2,
-        ScrollBarImageColor3 = theme.Border,
+        AutomaticCanvasSize = Enum.AutomaticSize.X,
+        ScrollBarThickness = 0,
         ElasticBehavior = Enum.ElasticBehavior.Never,
-        ScrollingDirection = Enum.ScrollingDirection.Y
+        ScrollingDirection = Enum.ScrollingDirection.X
     })
-    MakePadding(tabsScroll, 10, 10, 10, 10)
-    local tabsList = MakeList(tabsScroll, Enum.FillDirection.Vertical, 8)
+    MakePadding(tabsScroll, 6, 6, 6, 6)
+    local tabsList = New("UIListLayout", {
+        Parent = tabsScroll,
+        FillDirection = Enum.FillDirection.Horizontal,
+        Padding = UDim.new(0, 6),
+        SortOrder = Enum.SortOrder.LayoutOrder,
+        HorizontalAlignment = Enum.HorizontalAlignment.Center,
+        VerticalAlignment = Enum.VerticalAlignment.Center
+    })
 
     local contentFrame = New("Frame", {
         Parent = body,
