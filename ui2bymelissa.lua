@@ -2129,6 +2129,20 @@ local function CreateWindowShell(window)
     })
     MakeGradient(acrylic, Color3.fromRGB(255,255,255), Color3.fromRGB(255,255,255), 0)
 
+    -- Background image layer (optional asset ID)
+    local bgImage = nil
+    if window.Config.BackgroundImage and window.Config.BackgroundImage ~= "" then
+        bgImage = New("ImageLabel", {
+            Parent = frame,
+            BackgroundTransparency = 1,
+            Size = UDim2.fromScale(1, 1),
+            Image = window.Config.BackgroundImage,
+            ImageTransparency = window.Config.BackgroundImageTransparency or 0.5,
+            ScaleType = Enum.ScaleType.Crop,
+            ZIndex = 2
+        })
+    end
+
     local titleBar = New("Frame", {
         Parent = frame,
         BackgroundTransparency = 1,
@@ -2319,11 +2333,15 @@ local function CreateWindowShell(window)
     })
 
     -- Keep tab bar in sync with window position/size
+    -- Tab bar is 80% of window width, centered, 12px below window
     local function SyncTabBar()
         local ap = frame.AbsolutePosition
         local as = frame.AbsoluteSize
-        tabsFrame.Position = UDim2.fromOffset(ap.X, ap.Y + as.Y + 8)
-        tabsFrame.Size = UDim2.fromOffset(as.X, 44)
+        local tbW = math.floor(as.X * 0.80)
+        local tbX = ap.X + math.floor((as.X - tbW) / 2)
+        local tbY = ap.Y + as.Y + 12
+        tabsFrame.Position = UDim2.fromOffset(tbX, tbY)
+        tabsFrame.Size = UDim2.fromOffset(tbW, 44)
     end
 
     window.Gui = gui
@@ -2334,6 +2352,7 @@ local function CreateWindowShell(window)
     window.WindowGradient = gradient
     window.MainStroke = stroke
     window.Acrylic = acrylic
+    window.BgImage = bgImage
     window.TitleBar = titleBar
     window.TitleLabel = titleLabel
     window.SubtitleLabel = subtitleLabel
@@ -2780,6 +2799,38 @@ function WindowClass:CreateLabel(parent, options)
     end
 end
 
+function WindowClass:SetBackground(assetId, transparency)
+    local frame = self.Frame
+    if not frame then return end
+
+    if self.BgImage then
+        self.BgImage:Destroy()
+        self.BgImage = nil
+    end
+
+    if assetId and assetId ~= "" then
+        local img = New("ImageLabel", {
+            Parent = frame,
+            BackgroundTransparency = 1,
+            Size = UDim2.fromScale(1, 1),
+            Image = assetId,
+            ImageTransparency = transparency or 0.5,
+            ScaleType = Enum.ScaleType.Crop,
+            ZIndex = 2
+        })
+        self.BgImage = img
+        self.Config.BackgroundImage = assetId
+        self.Config.BackgroundImageTransparency = transparency or 0.5
+    end
+end
+
+function WindowClass:SetBackgroundTransparency(transparency)
+    if self.BgImage then
+        self.BgImage.ImageTransparency = math.clamp(transparency or 0.5, 0, 1)
+        self.Config.BackgroundImageTransparency = transparency
+    end
+end
+
 function Library:SetVisible(state)
     for _, window in ipairs(self.Windows) do
         if window and window.SetVisible then
@@ -2827,6 +2878,8 @@ function Library:CreateWindow(options)
         Draggable = true,
         Resizable = true,
         TwoSides = false,
+        BackgroundImage = "",
+        BackgroundImageTransparency = 0.5,
         FloatingButton = {
             Enabled = true,
             Icon = "lucide-spectrumx",
