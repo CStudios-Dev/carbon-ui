@@ -568,7 +568,25 @@ function WindowClass:_applyResponsive()
     local twoSides = self.Config.TwoSides and breakpoint ~= "Mobile"
     local tabW = twoSides and 48 or self.Config.TabWidth
 
-    if breakpoint == "Mobile" then
+    if self.Config.BottomTabs then
+        -- Bottom tab bar — fixed layout regardless of breakpoint
+        local TAB_BAR_H = 46
+        self.BodyList.FillDirection = Enum.FillDirection.Vertical
+        self.ContentFrame.Size = UDim2.new(1, 0, 1, -TAB_BAR_H)
+        self.TabsFrame.Size    = UDim2.new(1, 0, 0, TAB_BAR_H)
+        self.TabsList.FillDirection = Enum.FillDirection.Horizontal
+        self.TabsList.Padding = UDim.new(0, 2)
+
+        local tabCount = math.max(#self.Tabs, 1)
+        local btnW = math.max(70, math.floor((width - 12) / tabCount))
+        for _, tab in ipairs(self.Tabs) do
+            tab.Button.Size = UDim2.fromOffset(btnW, TAB_BAR_H - 10)
+            if tab.TextLabel then tab.TextLabel.Visible = true end
+            if tab.IconLabel then
+                tab.IconLabel.Position = UDim2.new(0, 10, 0.5, -7)
+            end
+        end
+    elseif breakpoint == "Mobile" then
         self.BodyList.FillDirection = Enum.FillDirection.Vertical
         self.TabsFrame.Size = UDim2.new(1, 0, 0, 54)
         self.TabsList.FillDirection = Enum.FillDirection.Horizontal
@@ -582,26 +600,28 @@ function WindowClass:_applyResponsive()
         self.ContentFrame.Size = UDim2.new(1, -tabW, 1, 0)
     end
 
-    for _, tab in ipairs(self.Tabs) do
-        if breakpoint == "Mobile" then
-            tab.Button.Size = UDim2.fromOffset(110, 38)
-            if tab.TextLabel then tab.TextLabel.Visible = true end
-            if tab.IconLabel then
-                tab.IconLabel.Position = UDim2.new(0, 10, 0.5, -7)
-            end
-        elseif twoSides then
-            -- Botão quadrado, icon centralizado, sem texto
-            tab.Button.Size = UDim2.new(1, 0, 0, 38)
-            if tab.TextLabel then tab.TextLabel.Visible = false end
-            if tab.IconLabel then
-                local s = tab.IconLabel.Size.X.Offset or 15
-                tab.IconLabel.Position = UDim2.new(0.5, -math.floor(s / 2), 0.5, -math.floor(s / 2))
-            end
-        else
-            tab.Button.Size = UDim2.new(1, 0, 0, 38)
-            if tab.TextLabel then tab.TextLabel.Visible = true end
-            if tab.IconLabel then
-                tab.IconLabel.Position = UDim2.new(0, 10, 0.5, -7)
+    if not self.Config.BottomTabs then
+        for _, tab in ipairs(self.Tabs) do
+            if breakpoint == "Mobile" then
+                tab.Button.Size = UDim2.fromOffset(110, 38)
+                if tab.TextLabel then tab.TextLabel.Visible = true end
+                if tab.IconLabel then
+                    tab.IconLabel.Position = UDim2.new(0, 10, 0.5, -7)
+                end
+            elseif twoSides then
+                -- Botão quadrado, icon centralizado, sem texto
+                tab.Button.Size = UDim2.new(1, 0, 0, 38)
+                if tab.TextLabel then tab.TextLabel.Visible = false end
+                if tab.IconLabel then
+                    local s = tab.IconLabel.Size.X.Offset or 15
+                    tab.IconLabel.Position = UDim2.new(0.5, -math.floor(s / 2), 0.5, -math.floor(s / 2))
+                end
+            else
+                tab.Button.Size = UDim2.new(1, 0, 0, 38)
+                if tab.TextLabel then tab.TextLabel.Visible = true end
+                if tab.IconLabel then
+                    tab.IconLabel.Position = UDim2.new(0, 10, 0.5, -7)
+                end
             end
         end
     end
@@ -2395,36 +2415,86 @@ local function CreateWindowShell(window)
         Size = UDim2.new(1, 0, 1, -53)
     })
 
-    local bodyList = MakeList(body, Enum.FillDirection.Horizontal, 0)
+    local TAB_BAR_H = 46
 
-    local tabsFrame = New("Frame", {
-        Parent = body,
-        BackgroundTransparency = 1,
-        Size = UDim2.new(0, window.Config.TabWidth, 1, 0)
-    })
+    local bodyList, tabsFrame, tabsScroll, tabsList, contentFrame, contentPages
 
-    local tabsScroll = New("ScrollingFrame", {
-        Parent = tabsFrame,
-        BackgroundTransparency = 1,
-        BorderSizePixel = 0,
-        Size = UDim2.fromScale(1, 1),
-        CanvasSize = UDim2.new(),
-        AutomaticCanvasSize = Enum.AutomaticSize.Y,
-        ScrollBarThickness = 2,
-        ScrollBarImageColor3 = theme.Border,
-        ElasticBehavior = Enum.ElasticBehavior.Never,
-        ScrollingDirection = Enum.ScrollingDirection.Y
-    })
-    MakePadding(tabsScroll, 10, 10, 10, 10)
-    local tabsList = MakeList(tabsScroll, Enum.FillDirection.Vertical, 8)
+    if window.Config.BottomTabs then
+        -- ── BOTTOM TABS LAYOUT ──
+        -- Content fills top, tab bar is pinned to bottom
+        bodyList = MakeList(body, Enum.FillDirection.Vertical, 0)
 
-    local contentFrame = New("Frame", {
-        Parent = body,
-        BackgroundTransparency = 1,
-        Size = UDim2.new(1, -window.Config.TabWidth, 1, 0)
-    })
+        contentFrame = New("Frame", {
+            Parent = body,
+            BackgroundTransparency = 1,
+            Size = UDim2.new(1, 0, 1, -TAB_BAR_H)
+        })
 
-    local contentPages = New("Frame", {
+        tabsFrame = New("Frame", {
+            Parent = body,
+            BackgroundColor3 = theme.Surface,
+            BackgroundTransparency = 0,
+            BorderSizePixel = 0,
+            Size = UDim2.new(1, 0, 0, TAB_BAR_H)
+        })
+        -- top divider line on the tab bar
+        New("Frame", {
+            Parent = tabsFrame,
+            BackgroundColor3 = theme.Primary,
+            BackgroundTransparency = 0.6,
+            BorderSizePixel = 0,
+            Size = UDim2.new(1, 0, 0, 1)
+        })
+
+        tabsScroll = New("ScrollingFrame", {
+            Parent = tabsFrame,
+            BackgroundTransparency = 1,
+            BorderSizePixel = 0,
+            Position = UDim2.fromOffset(0, 1),
+            Size = UDim2.new(1, 0, 1, -1),
+            CanvasSize = UDim2.new(),
+            AutomaticCanvasSize = Enum.AutomaticSize.X,
+            ScrollBarThickness = 0,
+            ElasticBehavior = Enum.ElasticBehavior.Never,
+            ScrollingDirection = Enum.ScrollingDirection.X
+        })
+        MakePadding(tabsScroll, 6, 6, 4, 4)
+        tabsList = MakeList(tabsScroll, Enum.FillDirection.Horizontal, 0)
+        tabsList.HorizontalAlignment = Enum.HorizontalAlignment.Center
+        tabsList.VerticalAlignment = Enum.VerticalAlignment.Center
+    else
+        -- ── SIDE TABS LAYOUT (default) ──
+        bodyList = MakeList(body, Enum.FillDirection.Horizontal, 0)
+
+        tabsFrame = New("Frame", {
+            Parent = body,
+            BackgroundTransparency = 1,
+            Size = UDim2.new(0, window.Config.TabWidth, 1, 0)
+        })
+
+        tabsScroll = New("ScrollingFrame", {
+            Parent = tabsFrame,
+            BackgroundTransparency = 1,
+            BorderSizePixel = 0,
+            Size = UDim2.fromScale(1, 1),
+            CanvasSize = UDim2.new(),
+            AutomaticCanvasSize = Enum.AutomaticSize.Y,
+            ScrollBarThickness = 2,
+            ScrollBarImageColor3 = theme.Border,
+            ElasticBehavior = Enum.ElasticBehavior.Never,
+            ScrollingDirection = Enum.ScrollingDirection.Y
+        })
+        MakePadding(tabsScroll, 10, 10, 10, 10)
+        tabsList = MakeList(tabsScroll, Enum.FillDirection.Vertical, 8)
+
+        contentFrame = New("Frame", {
+            Parent = body,
+            BackgroundTransparency = 1,
+            Size = UDim2.new(1, -window.Config.TabWidth, 1, 0)
+        })
+    end
+
+    contentPages = New("Frame", {
         Parent = contentFrame,
         BackgroundTransparency = 1,
         Size = UDim2.fromScale(1, 1)
@@ -3143,6 +3213,7 @@ function Library:CreateWindow(options)
         DiscordLink = "",
         BackgroundImage = "",
         BackgroundImageTransparency = 0.4,
+        BottomTabs = false,
         FloatingButton = {
             Enabled = true,
             Icon = "lucide-spectrumx",
