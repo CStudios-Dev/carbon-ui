@@ -123,7 +123,7 @@ end
 local function MakeCorner(parent, radius)
     return New("UICorner", {
         Parent = parent,
-        CornerRadius = UDim.new(0, 0)
+        CornerRadius = UDim.new(0, radius or 10)
     })
 end
 
@@ -632,7 +632,7 @@ function WindowClass:_createFloatingButton()
     })
     New("UICorner", {
         Parent = glow,
-        CornerRadius = UDim.new(0, 0)
+        CornerRadius = UDim.new(cornerScale, 0)
     })
 
     local buttonFrame = New("Frame", {
@@ -644,7 +644,7 @@ function WindowClass:_createFloatingButton()
     })
     New("UICorner", {
         Parent = buttonFrame,
-        CornerRadius = UDim.new(0, 0)
+        CornerRadius = UDim.new(cornerScale, 0)
     })
     MakeGradient(buttonFrame, self.Theme.SurfaceAlt, self.Theme.Surface, 90)
     local stroke = MakeStroke(buttonFrame, self.Theme.Primary, 1, 0.6)
@@ -2293,10 +2293,13 @@ local function CreateWindowShell(window)
 
     local tabsFrame = New("Frame", {
         Parent = body,
-        BackgroundTransparency = 1,
+        BackgroundColor3 = theme.Surface,
+        BackgroundTransparency = 0,
+        BorderSizePixel = 0,
         Size = UDim2.new(0, window.Config.TabWidth, 1, 0),
         LayoutOrder = 2
     })
+    MakeStroke(tabsFrame, theme.Border, 1, 0)
 
     local tabsScroll = New("ScrollingFrame", {
         Parent = tabsFrame,
