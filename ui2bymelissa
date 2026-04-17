@@ -168,6 +168,10 @@ local Templates = {
         MobileButtonsSide = "Left",
         ToggleButtonAssetId = "",  -- Set to a Roblox asset ID (number/string) to show a square image toggle button
         ToggleButtonSize = 40,     -- Size in pixels of the square toggle button
+
+        BackgroundImage = "",              -- Asset ID for the window background image (e.g. 123456789)
+        BackgroundImageTransparency = 0.5, -- 0 = fully opaque, 1 = invisible
+        BackgroundImageScaleType = "Crop", -- "Crop", "Fit", "Stretch", or "Tile"
     },
     Toggle = {
         Text = "Toggle",
@@ -4065,8 +4069,29 @@ function Library:CreateWindow(WindowInfo)
             CornerRadius = UDim.new(0, WindowInfo.CornerRadius - 1),
             Parent = MainFrame,
         })
-        do
-            local Lines = {
+
+        --// Background Image \\--
+        -- Sits at ZIndex 0, clipped to the window shape, behind all other content.
+        local BackgroundImageLabel = New("ImageLabel", {
+            BackgroundTransparency = 1,
+            ClipsDescendants = false,
+            Image = "",
+            ImageTransparency = WindowInfo.BackgroundImageTransparency,
+            ScaleType = Enum.ScaleType[WindowInfo.BackgroundImageScaleType] or Enum.ScaleType.Crop,
+            Size = UDim2.fromScale(1, 1),
+            ZIndex = 0,
+            Parent = MainFrame,
+        })
+        New("UICorner", {
+            CornerRadius = UDim.new(0, WindowInfo.CornerRadius - 1),
+            Parent = BackgroundImageLabel,
+        })
+        -- Apply asset ID if one was provided
+        if WindowInfo.BackgroundImage and tostring(WindowInfo.BackgroundImage) ~= "" then
+            local Url = tostring(WindowInfo.BackgroundImage):find("rbxassetid://") and tostring(WindowInfo.BackgroundImage)
+                or ("rbxassetid://" .. tostring(WindowInfo.BackgroundImage):match("%d+"))
+            BackgroundImageLabel.Image = Url
+        end
                 {
                     Position = UDim2.fromOffset(0, 48),
                     Size = UDim2.new(1, 0, 0, 1),
@@ -4291,6 +4316,30 @@ function Library:CreateWindow(WindowInfo)
 
     --// Window Table \\--
     local Window = {}
+
+    --// Background Image Controls \\--
+    -- Change the background image at any time after the window is created.
+    -- Pass an empty string or nil to remove the image.
+    function Window:SetBackgroundImage(AssetId, Transparency, ScaleType)
+        if not AssetId or tostring(AssetId) == "" then
+            BackgroundImageLabel.Image = ""
+            return
+        end
+        local Url = tostring(AssetId):find("rbxassetid://") and tostring(AssetId)
+            or ("rbxassetid://" .. tostring(AssetId):match("%d+"))
+        BackgroundImageLabel.Image = Url
+        if Transparency ~= nil then
+            BackgroundImageLabel.ImageTransparency = Transparency
+        end
+        if ScaleType then
+            BackgroundImageLabel.ScaleType = Enum.ScaleType[ScaleType] or Enum.ScaleType.Crop
+        end
+    end
+
+    -- Adjust only the transparency of the current background image.
+    function Window:SetBackgroundImageTransparency(Transparency)
+        BackgroundImageLabel.ImageTransparency = Transparency
+    end
 
     function Window:AddTab(Name: string, Icon)
         local TabButton: TextButton
