@@ -72,10 +72,10 @@ local Library = {
 
     IsLightTheme = false,
     Scheme = {
-        BackgroundColor = Color3.fromRGB(15, 15, 15),
-        MainColor = Color3.fromRGB(25, 25, 25),
-        AccentColor = Color3.fromRGB(125, 85, 255),
-        OutlineColor = Color3.fromRGB(40, 40, 40),
+        BackgroundColor = Color3.fromRGB(8, 0, 0),
+        MainColor = Color3.fromRGB(22, 4, 4),
+        AccentColor = Color3.fromRGB(170, 15, 15),
+        OutlineColor = Color3.fromRGB(55, 10, 10),
         FontColor = Color3.new(1, 1, 1),
         Font = Font.fromEnum(Enum.Font.Code),
 
@@ -4045,6 +4045,7 @@ function Library:CreateWindow(WindowInfo)
             BackgroundColor3 = function()
                 return Library:GetBetterColor(Library.Scheme.BackgroundColor, -1)
             end,
+            BackgroundTransparency = 0.18,
             Name = "Main",
             Position = WindowInfo.Position,
             Size = WindowInfo.Size,
@@ -4295,6 +4296,15 @@ function Library:CreateWindow(WindowInfo)
             if not MainFrame or not MainFrame.Parent then return end
             local AbsPos  = MainFrame.AbsolutePosition
             local AbsSize = MainFrame.AbsoluteSize
+            -- Fallback to configured size when frame is not yet rendered (e.g. still invisible)
+            if AbsSize.X == 0 then
+                AbsSize = Vector2.new(MainFrame.Size.X.Offset, MainFrame.Size.Y.Offset)
+                local vp = workspace.CurrentCamera.ViewportSize
+                AbsPos = Vector2.new(
+                    math.max(0, vp.X / 2 - AbsSize.X / 2),
+                    math.max(0, vp.Y / 2 - AbsSize.Y / 2)
+                )
+            end
             Tabs.Position = UDim2.fromOffset(AbsPos.X, AbsPos.Y + AbsSize.Y + 6)
             Tabs.Size     = UDim2.fromOffset(AbsSize.X, 40)
         end
@@ -4869,6 +4879,12 @@ function Library:CreateWindow(WindowInfo)
             end
             TabContainer.Visible = true
 
+            -- Ensure the tab bar is visible and correctly sized whenever a tab is shown
+            if Library.Toggled then
+                Tabs.Visible = true
+            end
+            UpdateTabsPosition()
+
             Library.ActiveTab = Tab
         end
 
@@ -5168,9 +5184,9 @@ function Library:CreateWindow(WindowInfo)
             AnchorPoint = Vector2.new(0, 0),
             BackgroundColor3 = "BackgroundColor",
             Position = UDim2.fromOffset(6, 6),
-            Size = UDim2.fromOffset(26, 26),
+            Size = UDim2.fromOffset(42, 42),
             Text = "☰",
-            TextSize = 16,
+            TextSize = 22,
             ZIndex = 20,
             Parent = ScreenGui,
             DPIExclude = {
