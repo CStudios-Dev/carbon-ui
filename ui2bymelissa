@@ -4593,7 +4593,6 @@ function Library:CreateWindow(WindowInfo)
             do
                 GroupboxHolder = New("Frame", {
                     BackgroundColor3 = "BackgroundColor",
-                    BackgroundTransparency = (tostring(WindowInfo.BackgroundImage) ~= "") and (WindowInfo.BackgroundPanelTransparency or 0.75) or 0,
                     Position = UDim2.fromOffset(2, 2),
                     Size = UDim2.new(1, -4, 1, -4),
                     Parent = Background,
@@ -4680,7 +4679,6 @@ function Library:CreateWindow(WindowInfo)
             do
                 TabboxHolder = New("Frame", {
                     BackgroundColor3 = "BackgroundColor",
-                    BackgroundTransparency = (tostring(WindowInfo.BackgroundImage) ~= "") and (WindowInfo.BackgroundPanelTransparency or 0.75) or 0,
                     Position = UDim2.fromOffset(2, 2),
                     Size = UDim2.new(1, -4, 1, -4),
                     Parent = Background,
