@@ -171,6 +171,7 @@ local Templates = {
         BackgroundImage = "",
         BackgroundImageTransparency = 0.5,
         BackgroundImageScaleType = "Crop",
+        BackgroundPanelTransparency = 0.75,
     },
     Toggle = {
         Text = "Toggle",
@@ -4267,6 +4268,7 @@ function Library:CreateWindow(WindowInfo)
         Tabs = New("ScrollingFrame", {
             AutomaticCanvasSize = Enum.AutomaticSize.Y,
             BackgroundColor3 = "BackgroundColor",
+            BackgroundTransparency = (tostring(WindowInfo.BackgroundImage) ~= "") and (WindowInfo.BackgroundPanelTransparency or 0.75) or 0,
             CanvasSize = UDim2.fromScale(0, 0),
             Position = UDim2.fromOffset(0, 49),
             ScrollBarThickness = 0,
@@ -4284,6 +4286,7 @@ function Library:CreateWindow(WindowInfo)
             BackgroundColor3 = function()
                 return Library:GetBetterColor(Library.Scheme.BackgroundColor, 1)
             end,
+            BackgroundTransparency = (tostring(WindowInfo.BackgroundImage) ~= "") and (WindowInfo.BackgroundPanelTransparency or 0.75) or 0,
             Name = "Container",
             Position = UDim2.new(1, 0, 0, 49),
             Size = UDim2.new(0.7, -1, 1, -70),
