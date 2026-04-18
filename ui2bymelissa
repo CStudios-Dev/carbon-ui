@@ -166,12 +166,11 @@ local Templates = {
         Font = Enum.Font.Code,
         ToggleKeybind = Enum.KeyCode.RightControl,
         MobileButtonsSide = "Left",
-        ToggleButtonAssetId = "",  -- Set to a Roblox asset ID (number/string) to show a square image toggle button
-        ToggleButtonSize = 40,     -- Size in pixels of the square toggle button
-
-        BackgroundImage = "",              -- Asset ID for the window background image (e.g. 123456789)
-        BackgroundImageTransparency = 0.5, -- 0 = fully opaque, 1 = invisible
-        BackgroundImageScaleType = "Crop", -- "Crop", "Fit", "Stretch", or "Tile"
+        ToggleButtonAssetId = "",
+        ToggleButtonSize = 40,
+        BackgroundImage = "",
+        BackgroundImageTransparency = 0.5,
+        BackgroundImageScaleType = "Crop",
     },
     Toggle = {
         Text = "Toggle",
@@ -897,15 +896,10 @@ function Library:AddDraggableButton(Text: string, Func)
     return Table
 end
 
---// Image Toggle Button \\--
--- Creates a draggable square ImageButton that opens/closes the UI.
--- AssetId  : Roblox asset ID as a number or string (e.g. 123456789 or "rbxassetid://123456789")
--- ButtonSize: optional pixel size for the square (default 40)
-function Library:AddImageToggleButton(AssetId, ButtonSize: number?)
+function Library:AddImageToggleButton(AssetId, ButtonSize)
     local Size = ButtonSize or 40
     local Table = {}
 
-    -- Normalise the asset ID into a full rbxassetid:// URL
     local AssetUrl = tostring(AssetId):find("rbxassetid://") and tostring(AssetId)
         or ("rbxassetid://" .. tostring(AssetId):match("%d+"))
 
@@ -917,7 +911,6 @@ function Library:AddImageToggleButton(AssetId, ButtonSize: number?)
         ImageColor3 = Color3.new(1, 1, 1),
         ZIndex = 10,
         Parent = ScreenGui,
-
         DPIExclude = {
             Position = true,
             Size = true,
@@ -931,21 +924,17 @@ function Library:AddImageToggleButton(AssetId, ButtonSize: number?)
     Library:MakeDraggable(Button, Button, true)
 
     Table.Button = Button
-
-    -- Click → toggle the UI open / closed
     Button.MouseButton1Click:Connect(function()
         Library:Toggle()
     end)
 
-    -- Allow changing the image at runtime
     function Table:SetAsset(NewAssetId)
         local Url = tostring(NewAssetId):find("rbxassetid://") and tostring(NewAssetId)
             or ("rbxassetid://" .. tostring(NewAssetId):match("%d+"))
         Button.Image = Url
     end
 
-    -- Allow resizing at runtime
-    function Table:SetSize(NewSize: number)
+    function Table:SetSize(NewSize)
         Button.Size = UDim2.fromOffset(NewSize, NewSize)
     end
 
@@ -4070,14 +4059,10 @@ function Library:CreateWindow(WindowInfo)
             Parent = MainFrame,
         })
 
-        --// Background Image \\--
-        -- Sits at ZIndex 0, clipped to the window shape, behind all other content.
         local BackgroundImageLabel = New("ImageLabel", {
             BackgroundTransparency = 1,
-            ClipsDescendants = false,
             Image = "",
             ImageTransparency = WindowInfo.BackgroundImageTransparency,
-            ScaleType = Enum.ScaleType[WindowInfo.BackgroundImageScaleType] or Enum.ScaleType.Crop,
             Size = UDim2.fromScale(1, 1),
             ZIndex = 0,
             Parent = MainFrame,
@@ -4086,12 +4071,10 @@ function Library:CreateWindow(WindowInfo)
             CornerRadius = UDim.new(0, WindowInfo.CornerRadius - 1),
             Parent = BackgroundImageLabel,
         })
-        -- Apply asset ID if one was provided
-        if WindowInfo.BackgroundImage and tostring(WindowInfo.BackgroundImage) ~= "" then
-            local Url = tostring(WindowInfo.BackgroundImage):find("rbxassetid://") and tostring(WindowInfo.BackgroundImage)
-                or ("rbxassetid://" .. tostring(WindowInfo.BackgroundImage):match("%d+"))
-            BackgroundImageLabel.Image = Url
+        if tostring(WindowInfo.BackgroundImage) ~= "" then
+            BackgroundImageLabel.Image = "rbxassetid://" .. tostring(WindowInfo.BackgroundImage):match("%d+")
         end
+
         do
             local Lines = {
                 {
@@ -4319,26 +4302,17 @@ function Library:CreateWindow(WindowInfo)
     --// Window Table \\--
     local Window = {}
 
-    --// Background Image Controls \\--
-    -- Change the background image at any time after the window is created.
-    -- Pass an empty string or nil to remove the image.
-    function Window:SetBackgroundImage(AssetId, Transparency, ScaleType)
+    function Window:SetBackgroundImage(AssetId, Transparency)
         if not AssetId or tostring(AssetId) == "" then
             BackgroundImageLabel.Image = ""
             return
         end
-        local Url = tostring(AssetId):find("rbxassetid://") and tostring(AssetId)
-            or ("rbxassetid://" .. tostring(AssetId):match("%d+"))
-        BackgroundImageLabel.Image = Url
+        BackgroundImageLabel.Image = "rbxassetid://" .. tostring(AssetId):match("%d+")
         if Transparency ~= nil then
             BackgroundImageLabel.ImageTransparency = Transparency
         end
-        if ScaleType then
-            BackgroundImageLabel.ScaleType = Enum.ScaleType[ScaleType] or Enum.ScaleType.Crop
-        end
     end
 
-    -- Adjust only the transparency of the current background image.
     function Window:SetBackgroundImageTransparency(Transparency)
         BackgroundImageLabel.ImageTransparency = Transparency
     end
@@ -5179,27 +5153,19 @@ function Library:CreateWindow(WindowInfo)
         end
     end
 
-    --// Square Image Toggle Button (all platforms) \\--
-    -- Spawned whenever WindowInfo.ToggleButtonAssetId is provided.
-    -- The button is draggable and toggles the UI open / closed on click.
-    if WindowInfo.ToggleButtonAssetId and tostring(WindowInfo.ToggleButtonAssetId) ~= "" then
+    if tostring(WindowInfo.ToggleButtonAssetId) ~= "" then
         local ImageToggleButton = Library:AddImageToggleButton(
             WindowInfo.ToggleButtonAssetId,
             WindowInfo.ToggleButtonSize
         )
-
-        -- Default position: top-left corner.
-        -- Shift it below the mobile Lock button when on mobile so they don't overlap.
         if Library.IsMobile then
-            local YOffset = (WindowInfo.MobileButtonsSide == "Right") and 86 or 86
             if WindowInfo.MobileButtonsSide == "Right" then
-                ImageToggleButton.Button.Position = UDim2.new(1, -6, 0, YOffset)
+                ImageToggleButton.Button.Position = UDim2.new(1, -6, 0, 86)
                 ImageToggleButton.Button.AnchorPoint = Vector2.new(1, 0)
             else
-                ImageToggleButton.Button.Position = UDim2.fromOffset(6, YOffset)
+                ImageToggleButton.Button.Position = UDim2.fromOffset(6, 86)
             end
         end
-
         Window.ImageToggleButton = ImageToggleButton
     end
 
