@@ -616,9 +616,9 @@ local function Update()
 if WindowTable.WindowToggle then
     AstricButton.Visible = false
     TopRightFrame.Visible = true
-    Twen:Create(MainFrame,TweenInfo.new(0.7,Enum.EasingStyle.Quint),{BackgroundTransparency = 0.4,Size = config.Size}):Play();
+    Twen:Create(MainFrame,TweenInfo.new(0.7,Enum.EasingStyle.Quint),{BackgroundTransparency = 0.08,Size = config.Size}):Play();
     Twen:Create(MainDropShadow,TweenInfo1,{ImageTransparency = 0.6}):Play();
-    Twen:Create(Headers,TweenInfo1,{BackgroundTransparency = 0.5}):Play();
+    -- headers hidden
     Twen:Create(Logo,TweenInfo1,{ImageTransparency = 0}):Play();
     Twen:Create(MainFrame,TweenInfo.new(0.3,Enum.EasingStyle.Quint),{Position = UDim2.fromScale(0.5,0.5)}):Play();
     WindowTable.ElBlurUI.Enabled = true;
@@ -627,8 +627,8 @@ if WindowTable.WindowToggle then
     -- BlockFrame3 hidden
     -- tab bar synced via RenderStepped
     Twen:Create(MainTabFrame,TweenInfo1,{Position = UDim2.new(0,0,0.13,0)}):Play();
-    Twen:Create(Description,TweenInfo1,{Position = UDim2.fromScale(0.328,0.071)}):Play();
-    Twen:Create(Title,TweenInfo1,{Position = UDim2.fromScale(0.328,0.013)}):Play();
+    Twen:Create(Description,TweenInfo1,{Position = UDim2.fromScale(0.5,0.072)}):Play();
+    Twen:Create(Title,TweenInfo1,{Position = UDim2.fromScale(0.5,0.018)}):Play();
     Twen:Create(Headers,TweenInfo1,{Position = UDim2.fromScale(0.01,0.015)}):Play();
     Twen:Create(UICorner,TweenInfo.new(0.5),{CornerRadius = UDim.new(0, 7)}):Play()
     InputFrame.Size = UDim2.new(1, 0, 0.12, 0)
@@ -638,11 +638,11 @@ else
     Twen:Create(MainFrame,TweenInfo.new(0.5,Enum.EasingStyle.Quint),{BackgroundTransparency = 1,Size = UDim2.new(0.085, 10,0.05, 0)}):Play();
     Twen:Create(MainFrame,TweenInfo.new(0.3,Enum.EasingStyle.Quint),{Position = WindowTable.LastPosition}):Play();
     Twen:Create(MainDropShadow,TweenInfo1,{ImageTransparency = 1}):Play();
-    Twen:Create(Headers,TweenInfo1,{BackgroundTransparency = 1}):Play();
+    -- headers hidden
     Twen:Create(Logo,TweenInfo1,{ImageTransparency = 1}):Play();
     -- tab bar hidden via RenderStepped
     Twen:Create(MainTabFrame,TweenInfo1,{Position = UDim2.new(1.5,0,0.13,0)}):Play();
-    Twen:Create(Description,TweenInfo1,{Position = UDim2.fromScale(1.5,0.071)}):Play();
+    Twen:Create(Description,TweenInfo1,{Position = UDim2.fromScale(1.5,0.072)}):Play();
     Twen:Create(Headers,TweenInfo1,{Position = UDim2.fromScale(0.01,-0.2)}):Play();
     Twen:Create(UICorner,TweenInfo.new(0.5),{CornerRadius = UDim.new(0.1,0)}):Play()
     BlockFrame1.Visible = false
@@ -710,7 +710,7 @@ MainFrame.ClipsDescendants = true;
 WindowTable.AddEffect = function(color)
 Library.GradientImage(MainFrame,color or Color3.fromRGB(70, 10, 10))
 end
-Twen:Create(MainFrame,TweenInfo1,{BackgroundTransparency = 0.4,Size = config.Size}):Play();
+Twen:Create(MainFrame,TweenInfo1,{BackgroundTransparency = 0.08,Size = config.Size}):Play();
 WindowTable.ElBlurUI = ElBlurSource.new(MainFrame);
 -- Disable DepthOfField to prevent background cracks/glitching
 pcall(function()
@@ -719,13 +719,9 @@ pcall(function()
         if dof then dof.Enabled = false end
     end
 end)
-UICorner.CornerRadius = UDim.new(0, 10)
+UICorner.CornerRadius = UDim.new(0, 8)
 UICorner.Parent = MainFrame
-local MainFrameStroke = Instance.new("UIStroke")
-MainFrameStroke.Color = Color3.fromRGB(200, 30, 30)
-MainFrameStroke.Transparency = 0.6
-MainFrameStroke.Thickness = 1.5
-MainFrameStroke.Parent = MainFrame
+-- no MainFrame stroke
 MainDropShadow.Name = "MainDropShadow"
 MainDropShadow.Parent = MainFrame
 MainDropShadow.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -751,7 +747,7 @@ Headers.ClipsDescendants = true
 Headers.Position = UDim2.new(0.0100000743, 0, 0.015, 0)
 Headers.Size = UDim2.new(0.300000012, 0, 0.178419471, 0)
 Headers.ZIndex = 3
-Twen:Create(Headers,TweenInfo2,{BackgroundTransparency = 0.5}):Play();
+Headers.Visible = false
 Logo.Name = "Logo"
 Logo.Parent = Headers
 Logo.Active = true
@@ -776,15 +772,15 @@ Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Title.BackgroundTransparency = 1.000
 Title.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Title.BorderSizePixel = 0
-Title.Position = UDim2.new(0.327570528, 0, 0.0126646794, 0)
-Title.Size = UDim2.new(0.671064615, 0, 0.0518743545, 0)
+Title.Position = UDim2.new(0.5, 0, 0.018, 0)
+Title.Size = UDim2.new(0.55, 0, 0.055, 0)
 Title.Font = Enum.Font.GothamBold
 Title.Text = config.Title
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextScaled = true
 Title.TextSize = 14.000
 Title.TextWrapped = true
-Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.TextXAlignment = Enum.TextXAlignment.Center
 Title.TextTransparency = 1;
 Twen:Create(Title,TweenInfo2,{TextTransparency = 0}):Play();
 Description.Name = "Description"
@@ -793,8 +789,8 @@ Description.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Description.BackgroundTransparency = 1.000
 Description.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Description.BorderSizePixel = 0
-Description.Position = UDim2.new(0.327570528, 0, 0.0709220618, 0)
-Description.Size = UDim2.new(0.671064615, 0, 0.0290780049, 0)
+Description.Position = UDim2.new(0.5, 0, 0.072, 0)
+Description.Size = UDim2.new(0.4, 0, 0.032, 0)
 Description.Font = Enum.Font.GothamBold
 Description.Text = config.Description
 Description.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -802,7 +798,7 @@ Description.TextScaled = true
 Description.TextSize = 14.000
 Description.TextTransparency = 1
 Description.TextWrapped = true
-Description.TextXAlignment = Enum.TextXAlignment.Left
+Description.TextXAlignment = Enum.TextXAlignment.Center
 Twen:Create(Description,TweenInfo2,{TextTransparency = 0.5}):Play();
 BlockFrame1.Name = "BlockFrame1"
 BlockFrame1.Parent = MainFrame
@@ -854,21 +850,17 @@ UIGradient_5.Parent = BlockFrame2
 TabButtonFrame.Name = "TabButtonFrame"
 TabButtonFrame.Parent = ScreenGui
 TabButtonFrame.AnchorPoint = Vector2.new(0, 1)
-TabButtonFrame.BackgroundColor3 = Color3.fromRGB(17, 19, 26)
+TabButtonFrame.BackgroundColor3 = Color3.fromRGB(12, 13, 18)
 TabButtonFrame.BackgroundTransparency = 1
 TabButtonFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TabButtonFrame.BorderSizePixel = 0
 TabButtonFrame.ClipsDescendants = true
 TabButtonFrame.Position = UDim2.new(0.5, -222, 0.6, 0)
 TabButtonFrame.Size = UDim2.new(1, 0, 0, 48)
-TabButtonFrame.BackgroundTransparency = 0.35
-UICorner_6.CornerRadius = UDim.new(0, 10)
+TabButtonFrame.BackgroundTransparency = 0.08
+UICorner_6.CornerRadius = UDim.new(0, 8)
 UICorner_6.Parent = TabButtonFrame
-local TabBarStroke = Instance.new("UIStroke")
-TabBarStroke.Color = Color3.fromRGB(200, 30, 30)
-TabBarStroke.Transparency = 0.6
-TabBarStroke.Thickness = 1.5
-TabBarStroke.Parent = TabButtonFrame
+-- no TabBar stroke
 TabButtons.Name = "TabButtons"
 TabButtons.Parent = TabButtonFrame
 TabButtons.Active = true
@@ -1057,7 +1049,7 @@ Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextScaled = true
 Title.TextSize = 14.000
 Title.TextWrapped = true
-Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.TextXAlignment = Enum.TextXAlignment.Center
 UIGradient.Rotation = 90
 UIGradient.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 0.00), NumberSequenceKeypoint.new(0.84, 0.25), NumberSequenceKeypoint.new(1.00, 1.00)}
 UIGradient.Parent = Title
@@ -1344,7 +1336,7 @@ Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextScaled = true
 Title.TextSize = 14.000
 Title.TextWrapped = true
-Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.TextXAlignment = Enum.TextXAlignment.Center
 Title.TextTransparency = 1;
 UIGradient_2.Rotation = 90
 UIGradient_2.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 0.00), NumberSequenceKeypoint.new(0.84, 0.25), NumberSequenceKeypoint.new(1.00, 1.00)}
@@ -1365,7 +1357,7 @@ Description.TextScaled = true
 Description.TextSize = 14.000
 Description.TextTransparency = 1
 Description.TextWrapped = true
-Description.TextXAlignment = Enum.TextXAlignment.Left
+Description.TextXAlignment = Enum.TextXAlignment.Center
 UIGradient_3.Rotation = 90
 UIGradient_3.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 0.00), NumberSequenceKeypoint.new(0.84, 0.25), NumberSequenceKeypoint.new(1.00, 1.00)}
 UIGradient_3.Parent = Description
@@ -1613,7 +1605,7 @@ Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextScaled = true
 Title.TextSize = 14.000
 Title.TextWrapped = true
-Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.TextXAlignment = Enum.TextXAlignment.Center
 Title.TextTransparency = 1
 Twen:Create(Title,TweenInfo2,{TextTransparency = 0}):Play();
 UIGradient_3.Rotation = 90
@@ -1745,7 +1737,7 @@ Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextScaled = true
 Title.TextSize = 14.000
 Title.TextWrapped = true
-Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.TextXAlignment = Enum.TextXAlignment.Center
 Title.TextTransparency = 0
 UIGradient_3.Rotation = 90
 UIGradient_3.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 0.00), NumberSequenceKeypoint.new(0.84, 0.25), NumberSequenceKeypoint.new(1.00, 1.00)}
@@ -4118,7 +4110,7 @@ Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextScaled = true
 Title.TextSize = 14.000
 Title.TextWrapped = true
-Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.TextXAlignment = Enum.TextXAlignment.Center
 UIGradient_2.Rotation = 90
 UIGradient_2.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 0.00), NumberSequenceKeypoint.new(0.75, 0.27), NumberSequenceKeypoint.new(1.00, 1.00)}
 UIGradient_2.Parent = Title
