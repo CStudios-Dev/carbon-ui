@@ -1,4 +1,27 @@
---modified by Melissa ----------------------------------
+--[[
+
+Astric Studios
+by Nebula Softworks
+
+Main Credits
+
+Hunter (Nebula Softworks) | Designing And Programming | Main Developer
+JustHey (Nebula Softworks) | Configurations, Bug Fixing And More! | Co Developer
+Throit | Color Picker
+Wally | Dragging And Certain Functions
+Sirius | PCall Parsing, Notifications, Slider And Home Tab
+Astric Executor | Original UI
+
+
+Extra Credits / Provided Certain Elements
+
+Pookie Pepelss | Bug Tester
+Inori | Configuration Concept
+Latte Softworks and qweery | Lucide Icons And Material Icons
+kirill9655 | Loading Circle
+Deity/dp4pv/x64x70 | Certain Scripting and Testing ig
+
+]]
 
 local Release = "made by melissa"
 
@@ -21,7 +44,7 @@ if RunService:IsStudio() then
 	isStudio = true
 end
 
-
+-- Credits To Latte Softworks And qweery for Lucide And Material Icons Respectively.
 local IconModule = {
 	Lucide = nil,
 	Material = {
@@ -1908,6 +1931,27 @@ local Navigation = Main.Navigation
 local Tabs = Navigation.Tabs
 local Notifications = AstricUI.Notifications
 local KeySystem : Frame = Main.KeySystem
+
+local BLACK = Color3.fromRGB(0, 0, 0)
+local DARK = Color3.fromRGB(10, 10, 10)
+
+local function ApplyBlackTheme(parent)
+	for _, obj in ipairs(parent:GetDescendants()) do
+		if obj:IsA("Frame") or obj:IsA("ScrollingFrame") or obj:IsA("ImageLabel") or obj:IsA("ImageButton") then
+			local bg = obj.BackgroundColor3
+			local r = math.round(bg.R * 255)
+			local g = math.round(bg.G * 255)
+			local b = math.round(bg.B * 255)
+			if r < 80 and g < 80 and b < 80 and obj.BackgroundTransparency < 1 then
+				obj.BackgroundColor3 = BLACK
+			elseif r < 120 and g < 120 and b < 120 and obj.BackgroundTransparency < 1 then
+				obj.BackgroundColor3 = DARK
+			end
+		end
+	end
+end
+
+ApplyBlackTheme(AstricUI)
 
 -- local function LoadConfiguration(Configuration, autoload)
 -- 	local Data = HttpService:JSONDecode(Configuration)
