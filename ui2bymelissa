@@ -623,9 +623,9 @@ if WindowTable.WindowToggle then
     Twen:Create(MainFrame,TweenInfo.new(0.3,Enum.EasingStyle.Quint),{Position = UDim2.fromScale(0.5,0.5)}):Play();
     WindowTable.ElBlurUI.Enabled = true;
     BlockFrame1.Visible = false
-    Twen:Create(BlockFrame2,TweenInfo1,{BackgroundTransparency = 0.8}):Play();
-    Twen:Create(BlockFrame3,TweenInfo1,{BackgroundTransparency = 0.8}):Play();
-    Twen:Create(TabButtonFrame,TweenInfo1,{Position = UDim2.new(0,0,1,0)}):Play();
+    -- BlockFrame2 hidden
+    -- BlockFrame3 hidden
+    -- tab bar synced via RenderStepped
     Twen:Create(MainTabFrame,TweenInfo1,{Position = UDim2.new(0,0,0.13,0)}):Play();
     Twen:Create(Description,TweenInfo1,{Position = UDim2.fromScale(0.328,0.071)}):Play();
     Twen:Create(Title,TweenInfo1,{Position = UDim2.fromScale(0.328,0.013)}):Play();
@@ -640,14 +640,14 @@ else
     Twen:Create(MainDropShadow,TweenInfo1,{ImageTransparency = 1}):Play();
     Twen:Create(Headers,TweenInfo1,{BackgroundTransparency = 1}):Play();
     Twen:Create(Logo,TweenInfo1,{ImageTransparency = 1}):Play();
-    Twen:Create(TabButtonFrame,TweenInfo1,{Position = UDim2.new(0,0,1.3,0)}):Play();
+    -- tab bar hidden via RenderStepped
     Twen:Create(MainTabFrame,TweenInfo1,{Position = UDim2.new(1.5,0,0.13,0)}):Play();
     Twen:Create(Description,TweenInfo1,{Position = UDim2.fromScale(1.5,0.071)}):Play();
     Twen:Create(Headers,TweenInfo1,{Position = UDim2.fromScale(0.01,-0.2)}):Play();
     Twen:Create(UICorner,TweenInfo.new(0.5),{CornerRadius = UDim.new(0.1,0)}):Play()
     BlockFrame1.Visible = false
-    Twen:Create(BlockFrame2,TweenInfo1,{BackgroundTransparency = 1}):Play();
-    Twen:Create(BlockFrame3,TweenInfo1,{BackgroundTransparency = 1}):Play();
+    -- BlockFrame2 hidden
+    -- BlockFrame3 hidden
     WindowTable.ElBlurUI.Enabled = false;
     InputFrame.Size = UDim2.new(1, 0, 1, 0)
 end;
@@ -657,6 +657,24 @@ if WindowTable.ToggleButton then
 end;
 task.delay(0.5,WindowTable.ElBlurUI.Update)
 end;
+-- Sync floating tab bar position to follow MainFrame
+local RS = game:GetService("RunService")
+RS.RenderStepped:Connect(function()
+    if not MainFrame or not TabButtonFrame then return end
+    local absPos = MainFrame.AbsolutePosition
+    local absSize = MainFrame.AbsoluteSize
+    if WindowTable.WindowToggle then
+        TabButtonFrame.Visible = true
+        TabButtonFrame.Position = UDim2.fromOffset(
+            absPos.X,
+            absPos.Y + absSize.Y + 8
+        )
+        TabButtonFrame.Size = UDim2.fromOffset(absSize.X, 48)
+    else
+        TabButtonFrame.Visible = false
+    end
+end)
+
 MinimizeBtn.MouseButton1Click:Connect(function()
     WindowTable.WindowToggle = not WindowTable.WindowToggle
     Update()
@@ -694,8 +712,20 @@ Library.GradientImage(MainFrame,color or Color3.fromRGB(70, 10, 10))
 end
 Twen:Create(MainFrame,TweenInfo1,{BackgroundTransparency = 0.4,Size = config.Size}):Play();
 WindowTable.ElBlurUI = ElBlurSource.new(MainFrame);
-UICorner.CornerRadius = UDim.new(0, 7)
+-- Disable DepthOfField to prevent background cracks/glitching
+pcall(function()
+    if WindowTable.ElBlurUI and WindowTable.ElBlurUI.Instances then
+        local dof = WindowTable.ElBlurUI.Instances.DepthOfField
+        if dof then dof.Enabled = false end
+    end
+end)
+UICorner.CornerRadius = UDim.new(0, 10)
 UICorner.Parent = MainFrame
+local MainFrameStroke = Instance.new("UIStroke")
+MainFrameStroke.Color = Color3.fromRGB(200, 30, 30)
+MainFrameStroke.Transparency = 0.6
+MainFrameStroke.Thickness = 1.5
+MainFrameStroke.Parent = MainFrame
 MainDropShadow.Name = "MainDropShadow"
 MainDropShadow.Parent = MainFrame
 MainDropShadow.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -713,7 +743,7 @@ MainDropShadow.Rotation = 0.0001;
 Twen:Create(MainDropShadow,TweenInfo2,{ImageTransparency = 0.6}):Play();
 Headers.Name = "Headers"
 Headers.Parent = MainFrame
-Headers.BackgroundColor3 = Color3.fromRGB(17, 19, 26)
+Headers.BackgroundColor3 = Color3.fromRGB(12, 13, 18)
 Headers.BackgroundTransparency = 1
 Headers.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Headers.BorderSizePixel = 0
@@ -784,7 +814,7 @@ BlockFrame1.BorderSizePixel = 0
 BlockFrame1.Position = UDim2.new(0.317000002, 0, 0.5, 0)
 BlockFrame1.Size = UDim2.new(0, 1, 1, 0)
 BlockFrame1.ZIndex = 3
-Twen:Create(BlockFrame1,TweenInfo2,{BackgroundTransparency = 0.8}):Play();
+BlockFrame1.Visible = false
 UICorner_3.CornerRadius = UDim.new(0.5, 0)
 UICorner_3.Parent = BlockFrame1
 UIGradient_3.Rotation = 90
@@ -800,7 +830,7 @@ BlockFrame3.BorderSizePixel = 0
 BlockFrame3.Position = UDim2.new(0.317000061, 0, 0.120060779, 0)
 BlockFrame3.Size = UDim2.new(0.682999969, 0, 0, 1)
 BlockFrame3.ZIndex = 3
-Twen:Create(BlockFrame3,TweenInfo2,{BackgroundTransparency = 0.8}):Play();
+BlockFrame3.Visible = false
 UICorner_4.CornerRadius = UDim.new(0.5, 0)
 UICorner_4.Parent = BlockFrame3
 UIGradient_4.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 0.00), NumberSequenceKeypoint.new(0.98, 0.00), NumberSequenceKeypoint.new(1.00, 1.00)}
@@ -815,25 +845,30 @@ BlockFrame2.BorderSizePixel = 0
 BlockFrame2.Position = UDim2.new(-0.00100000005, 0, 0.204999998, 0)
 BlockFrame2.Size = UDim2.new(0.318471342, 0, 0, 1)
 BlockFrame2.ZIndex = 3
-Twen:Create(BlockFrame2,TweenInfo2,{BackgroundTransparency = 0.8}):Play();
+BlockFrame2.Visible = false
 UICorner_5.CornerRadius = UDim.new(0.5, 0)
 UICorner_5.Parent = BlockFrame2
 UIGradient_5.Rotation = -180
 UIGradient_5.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 0.00), NumberSequenceKeypoint.new(0.98, 0.00), NumberSequenceKeypoint.new(1.00, 1.00)}
 UIGradient_5.Parent = BlockFrame2
 TabButtonFrame.Name = "TabButtonFrame"
-TabButtonFrame.Parent = MainFrame
+TabButtonFrame.Parent = ScreenGui
 TabButtonFrame.AnchorPoint = Vector2.new(0, 1)
 TabButtonFrame.BackgroundColor3 = Color3.fromRGB(17, 19, 26)
 TabButtonFrame.BackgroundTransparency = 1
 TabButtonFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TabButtonFrame.BorderSizePixel = 0
 TabButtonFrame.ClipsDescendants = true
-TabButtonFrame.Position = UDim2.new(0, 0, 1, 0)
+TabButtonFrame.Position = UDim2.new(0.5, -222, 0.6, 0)
 TabButtonFrame.Size = UDim2.new(1, 0, 0, 48)
-Twen:Create(TabButtonFrame,TweenInfo2,{BackgroundTransparency = 0.5}):Play();
-UICorner_6.CornerRadius = UDim.new(0, 3)
+TabButtonFrame.BackgroundTransparency = 0.35
+UICorner_6.CornerRadius = UDim.new(0, 10)
 UICorner_6.Parent = TabButtonFrame
+local TabBarStroke = Instance.new("UIStroke")
+TabBarStroke.Color = Color3.fromRGB(200, 30, 30)
+TabBarStroke.Transparency = 0.6
+TabBarStroke.Thickness = 1.5
+TabBarStroke.Parent = TabButtonFrame
 TabButtons.Name = "TabButtons"
 TabButtons.Parent = TabButtonFrame
 TabButtons.Active = true
