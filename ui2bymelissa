@@ -2237,7 +2237,14 @@ function Astric:CreateWindow(WindowSettings)
 		ConfigSettings = {},
 
 		KeySystem = false,
-		KeySettings = {}
+		KeySettings = {},
+
+		ToggleButton = {
+			Enabled = true,
+			AssetID = "6031097225",
+			Size = 50,
+			Position = UDim2.new(0, 20, 0.5, 0)
+		}
 	}, WindowSettings or {})
 
 	WindowSettings.ConfigSettings = Kwargify({
@@ -6713,6 +6720,102 @@ function Astric:CreateWindow(WindowSettings)
 		Window.State = true
 		AstricUI.MobileSupport.Visible = false
 	end)
+
+	local ToggleButtonSettings = Kwargify({
+		Enabled = true,
+		AssetID = "6031097225",
+		Size = 50,
+		Position = UDim2.new(0, 20, 0.5, 0)
+	}, WindowSettings.ToggleButton or {})
+
+	if ToggleButtonSettings.Enabled then
+		local ToggleGui = Instance.new("ScreenGui")
+		ToggleGui.Name = "AstricToggleButton"
+		ToggleGui.ResetOnSpawn = false
+		ToggleGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+		ToggleGui.DisplayOrder = 999999999
+
+		pcall(function() ToggleGui.Parent = gethui() end)
+		if not ToggleGui.Parent then
+			pcall(function() syn.protect_gui(ToggleGui) ToggleGui.Parent = CoreGui end)
+		end
+		if not ToggleGui.Parent then
+			ToggleGui.Parent = CoreGui
+		end
+
+		local ToggleBtn = Instance.new("ImageButton")
+		ToggleBtn.Name = "AstricToggle"
+		ToggleBtn.Size = UDim2.fromOffset(ToggleButtonSettings.Size, ToggleButtonSettings.Size)
+		ToggleBtn.Position = ToggleButtonSettings.Position
+		ToggleBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+		ToggleBtn.BackgroundTransparency = 0.3
+		ToggleBtn.Image = "rbxassetid://" .. tostring(ToggleButtonSettings.AssetID)
+		ToggleBtn.ImageTransparency = 0
+		ToggleBtn.BorderSizePixel = 0
+		ToggleBtn.Parent = ToggleGui
+
+		local ToggleCorner = Instance.new("UICorner")
+		ToggleCorner.CornerRadius = UDim.new(0, 8)
+		ToggleCorner.Parent = ToggleBtn
+
+		local ToggleStroke = Instance.new("UIStroke")
+		ToggleStroke.Color = Color3.fromRGB(255, 0, 0)
+		ToggleStroke.Thickness = 1.5
+		ToggleStroke.Transparency = 0.5
+		ToggleStroke.Parent = ToggleBtn
+
+		local dragging, dragStart, startPos = false, nil, nil
+
+		ToggleBtn.InputBegan:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+				dragging = true
+				dragStart = input.Position
+				startPos = ToggleBtn.Position
+			end
+		end)
+
+		ToggleBtn.InputChanged:Connect(function(input)
+			if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+				local delta = input.Position - dragStart
+				ToggleBtn.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+			end
+		end)
+
+		ToggleBtn.InputEnded:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+				local delta = input.Position - dragStart
+				if math.abs(delta.X) < 5 and math.abs(delta.Y) < 5 then
+					if Window.State then
+						Hide(Main, Window.Bind, false)
+						dragBar.Visible = false
+						Window.State = false
+						tween(ToggleBtn, {BackgroundTransparency = 0.1})
+						tween(ToggleStroke, {Transparency = 0})
+					else
+						Unhide(Main, Window.CurrentTab)
+						dragBar.Visible = true
+						Window.State = true
+						tween(ToggleBtn, {BackgroundTransparency = 0.3})
+						tween(ToggleStroke, {Transparency = 0.5})
+					end
+				end
+				dragging = false
+			end
+		end)
+
+		ToggleBtn.MouseEnter:Connect(function()
+			tween(ToggleBtn, {BackgroundTransparency = 0})
+			tween(ToggleStroke, {Transparency = 0, Color = Color3.fromRGB(255, 50, 50)})
+		end)
+		ToggleBtn.MouseLeave:Connect(function()
+			tween(ToggleBtn, {BackgroundTransparency = Window.State and 0.3 or 0.1})
+			tween(ToggleStroke, {Transparency = Window.State and 0.5 or 0, Color = Color3.fromRGB(255, 0, 0)})
+		end)
+
+		function Window:SetToggleImage(id)
+			ToggleBtn.Image = "rbxassetid://" .. tostring(id)
+		end
+	end
 
 	return Window
 end
