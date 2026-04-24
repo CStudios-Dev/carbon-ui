@@ -341,7 +341,7 @@ GLImage.Size = UDim2.new(0.800000012, 0, 0.800000012, 0)
 GLImage.SizeConstraint = Enum.SizeConstraint.RelativeYY
 GLImage.ZIndex = E.ZIndex - 1;
 GLImage.Image = "rbxassetid://867619398"
-GLImage.ImageColor3 = Color or Color3.fromRGB(60, 130, 255)
+GLImage.ImageColor3 = Color or Color3.fromRGB(200, 30, 30)
 GLImage.ImageTransparency = 1;
 local str = 'GL_EFFECT_'..tostring(tick());
 game:GetService('RunService'):BindToRenderStep(str,45,function()
@@ -375,7 +375,8 @@ Description = "discord.gg/BHRUtyTbk2",
 Keybind = Enum.KeyCode.LeftControl,
 Logo = "http://www.roblox.com/asset/?id=18810965406",
 Size = UDim2.new(0.100000001, 445, 0.100000001, 315),
-ConfigFolder = "SugarConfigs"
+ConfigFolder = "SugarConfigs",
+Version = "v5.0"
 });
 local TweenInfo1 = TweenInfo.new(0.5,Enum.EasingStyle.Quint,Enum.EasingDirection.InOut);
 local TweenInfo2 = TweenInfo.new(0.3,Enum.EasingStyle.Quint,Enum.EasingDirection.InOut);
@@ -458,115 +459,219 @@ if isfile(configFolder .. "/" .. name .. ".json") then
 delfile(configFolder .. "/" .. name .. ".json")
 end
 end
-local ImageButton = Instance.new("ImageButton")
-ImageButton.Parent = MainFrame
-ImageButton.AnchorPoint = Vector2.new(1, 0)
-ImageButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-ImageButton.BackgroundTransparency = 1.000
-ImageButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
-ImageButton.BorderSizePixel = 0
-ImageButton.Position = UDim2.new(0.992500007, 0, 0.00999999978, 0)
-ImageButton.Size = UDim2.new(0.0850000009, 0, 0.0850000009, 0)
-ImageButton.SizeConstraint = Enum.SizeConstraint.RelativeYY
-ImageButton.ZIndex = 50
-ImageButton.Image = "rbxassetid://10002398990"
-ImageButton.ImageTransparency = 1
-local HomeIcon = Instance.new("ImageLabel")
-HomeIcon.Parent = ImageButton
-HomeIcon.AnchorPoint = Vector2.new(0.5, 0.5)
-HomeIcon.BackgroundColor3 = Color3.fromRGB(60, 130, 255)
-HomeIcon.BorderColor3 = Color3.fromRGB(0, 0, 0)
-HomeIcon.BorderSizePixel = 0
-HomeIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
-HomeIcon.Size = UDim2.new(0.7,0,0.7,0)
-HomeIcon.ZIndex = 49
-HomeIcon.Image = "rbxassetid://7733993211"
-HomeIcon.ScaleType = Enum.ScaleType.Fit
-HomeIcon.ImageTransparency = 1;
-HomeIcon.BackgroundTransparency = 1;
+-- ── TOP RIGHT BUTTON ROW (Version badge | Sliders icon | Minimize) ──────
+local TopRightFrame = Instance.new("Frame")
+TopRightFrame.Name = "TopRightFrame"
+TopRightFrame.Parent = MainFrame
+TopRightFrame.AnchorPoint = Vector2.new(1, 0.5)
+TopRightFrame.BackgroundTransparency = 1
+TopRightFrame.BorderSizePixel = 0
+TopRightFrame.Position = UDim2.new(0.99, 0, 0.065, 0)
+TopRightFrame.Size = UDim2.new(0, 175, 0, 28)
+TopRightFrame.ZIndex = 50
+local TopRightLayout = Instance.new("UIListLayout")
+TopRightLayout.Parent = TopRightFrame
+TopRightLayout.FillDirection = Enum.FillDirection.Horizontal
+TopRightLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+TopRightLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+TopRightLayout.SortOrder = Enum.SortOrder.LayoutOrder
+TopRightLayout.Padding = UDim.new(0, 5)
+
+-- Version Badge (text changeable via WindowTable.SetVersion("v6.0"))
+local VersionBadge = Instance.new("Frame")
+VersionBadge.Name = "VersionBadge"
+VersionBadge.Parent = TopRightFrame
+VersionBadge.BackgroundColor3 = Color3.fromRGB(22, 22, 30)
+VersionBadge.BackgroundTransparency = 0.2
+VersionBadge.BorderSizePixel = 0
+VersionBadge.Size = UDim2.new(0, 55, 0, 24)
+VersionBadge.ZIndex = 51
+VersionBadge.LayoutOrder = 1
+local VBCorner = Instance.new("UICorner")
+VBCorner.CornerRadius = UDim.new(0, 5)
+VBCorner.Parent = VersionBadge
+local VBStroke = Instance.new("UIStroke")
+VBStroke.Color = Color3.fromRGB(200, 30, 30)
+VBStroke.Transparency = 0.45
+VBStroke.Parent = VersionBadge
+local VersionText = Instance.new("TextLabel")
+VersionText.Name = "VersionText"
+VersionText.Parent = VersionBadge
+VersionText.AnchorPoint = Vector2.new(0.5, 0.5)
+VersionText.BackgroundTransparency = 1
+VersionText.Position = UDim2.new(0.5, 0, 0.5, 0)
+VersionText.Size = UDim2.new(0.88, 0, 0.75, 0)
+VersionText.ZIndex = 52
+VersionText.Font = Enum.Font.GothamBold
+VersionText.Text = config.Version or "v5.0"
+VersionText.TextColor3 = Color3.fromRGB(255, 255, 255)
+VersionText.TextScaled = true
+VersionText.TextTransparency = 0.05
+WindowTable.SetVersion = function(v) VersionText.Text = tostring(v) end
+
+-- Sliders / Settings Icon Button
+local SettingsBtn = Instance.new("TextButton")
+SettingsBtn.Name = "SettingsBtn"
+SettingsBtn.Parent = TopRightFrame
+SettingsBtn.BackgroundColor3 = Color3.fromRGB(22, 22, 30)
+SettingsBtn.BackgroundTransparency = 0.2
+SettingsBtn.BorderSizePixel = 0
+SettingsBtn.Size = UDim2.new(0, 30, 0, 24)
+SettingsBtn.ZIndex = 51
+SettingsBtn.LayoutOrder = 2
+SettingsBtn.Text = ""
+local SBCorner = Instance.new("UICorner")
+SBCorner.CornerRadius = UDim.new(0, 5)
+SBCorner.Parent = SettingsBtn
+local SBStroke = Instance.new("UIStroke")
+SBStroke.Color = Color3.fromRGB(55, 55, 70)
+SBStroke.Transparency = 0.4
+SBStroke.Parent = SettingsBtn
+pcall(function()
+    local ico = Icons.Image({ Icon = "sliders-horizontal", Size = UDim2.new(0.6,0,0.6,0) })
+    if ico and ico.IconFrame then
+        ico.IconFrame.Parent = SettingsBtn
+        ico.IconFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+        ico.IconFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+        ico.IconFrame.ZIndex = 52
+    end
+end)
+
+-- Minimize (—) Button
+local MinimizeBtn = Instance.new("TextButton")
+MinimizeBtn.Name = "MinimizeBtn"
+MinimizeBtn.Parent = TopRightFrame
+MinimizeBtn.BackgroundColor3 = Color3.fromRGB(22, 22, 30)
+MinimizeBtn.BackgroundTransparency = 0.2
+MinimizeBtn.BorderSizePixel = 0
+MinimizeBtn.Size = UDim2.new(0, 30, 0, 24)
+MinimizeBtn.ZIndex = 51
+MinimizeBtn.LayoutOrder = 3
+MinimizeBtn.Font = Enum.Font.GothamBold
+MinimizeBtn.Text = "—"
+MinimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+MinimizeBtn.TextScaled = true
+MinimizeBtn.TextTransparency = 0.15
+local MBCorner = Instance.new("UICorner")
+MBCorner.CornerRadius = UDim.new(0, 5)
+MBCorner.Parent = MinimizeBtn
+local MBStroke = Instance.new("UIStroke")
+MBStroke.Color = Color3.fromRGB(55, 55, 70)
+MBStroke.Transparency = 0.4
+MBStroke.Parent = MinimizeBtn
+
+-- ── ASTRIC floating toggle button (shown when UI is hidden) ───────────────
+local AstricButton = Instance.new("TextButton")
+AstricButton.Name = "AstricButton"
+AstricButton.Parent = ScreenGui
+AstricButton.AnchorPoint = Vector2.new(0.5, 0.5)
+AstricButton.BackgroundColor3 = Color3.fromRGB(12, 10, 10)
+AstricButton.BackgroundTransparency = 0.1
+AstricButton.BorderSizePixel = 0
+AstricButton.Position = UDim2.new(0.5, 0, 0.05, 0)
+AstricButton.Size = UDim2.new(0, 82, 0, 30)
+AstricButton.ZIndex = 200
+AstricButton.Visible = false
+AstricButton.Font = Enum.Font.Highway
+AstricButton.Text = "ASTRIC"
+AstricButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+AstricButton.TextScaled = true
+AstricButton.TextTransparency = 0
+local ABCorner = Instance.new("UICorner")
+ABCorner.CornerRadius = UDim.new(0, 5)
+ABCorner.Parent = AstricButton
+local ABStroke = Instance.new("UIStroke")
+ABStroke.Color = Color3.fromRGB(200, 30, 30)
+ABStroke.Transparency = 0.3
+ABStroke.Parent = AstricButton
+-- Draggable ASTRIC button
+local _dragging, _dragStart, _startPos
+AstricButton.InputBegan:Connect(function(inp)
+    if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+        _dragging = false
+        _dragStart = inp.Position
+        _startPos = AstricButton.Position
+        inp.Changed:Connect(function()
+            if inp.UserInputState == Enum.UserInputState.End then
+                _dragStart = nil
+            end
+        end)
+    end
+end)
+Input.InputChanged:Connect(function(inp)
+    if _dragStart and (inp.UserInputType == Enum.UserInputType.MouseMovement or inp.UserInputType == Enum.UserInputType.Touch) then
+        local delta = inp.Position - _dragStart
+        if delta.Magnitude > 4 then _dragging = true end
+        AstricButton.Position = UDim2.new(_startPos.X.Scale, _startPos.X.Offset + delta.X, _startPos.Y.Scale, _startPos.Y.Offset + delta.Y)
+    end
+end)
+Input.InputEnded:Connect(function(inp)
+    if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+        _dragStart = nil
+    end
+end)
+
 local isMobile = Input.TouchEnabled
-if isMobile then
-ImageButton.Size = UDim2.new(0.12, 0, 0.12, 0)
-end
 local function Update()
 if WindowTable.WindowToggle then
-Twen:Create(MainFrame,TweenInfo.new(0.7,Enum.EasingStyle.Quint),{BackgroundTransparency = 0.4,Size = config.Size}):Play();
-Twen:Create(MainDropShadow,TweenInfo1,{ImageTransparency = 0.6}):Play();
-Twen:Create(Headers,TweenInfo1,{BackgroundTransparency = 0.5}):Play();
-Twen:Create(Logo,TweenInfo1,{ImageTransparency = 0}):Play();
-Twen:Create(MainFrame,TweenInfo.new(0.3,Enum.EasingStyle.Quint),{Position = UDim2.fromScale(0.5,0.5)}):Play();
-WindowTable.ElBlurUI.Enabled = true;
-BlockFrame1.Visible = false
-Twen:Create(BlockFrame2,TweenInfo1,{BackgroundTransparency = 0.8}):Play();
-Twen:Create(BlockFrame3,TweenInfo1,{BackgroundTransparency = 0.8}):Play();
-Twen:Create(TabButtonFrame,TweenInfo1,{Position = UDim2.new(0,0,1,0)}):Play();
-Twen:Create(MainTabFrame,TweenInfo1,{Position = UDim2.new(0,0,0.13,0)}):Play();
-Twen:Create(Description,TweenInfo1,{Position = UDim2.fromScale(0.328,0.071)}):Play();
-Twen:Create(Title,TweenInfo1,{Position = UDim2.fromScale(0.328,0.013)}):Play();
-Twen:Create(Headers,TweenInfo1,{Position = UDim2.fromScale(0.01,0.015)}):Play();
-Twen:Create(ImageButton,TweenInfo.new(0.4,Enum.EasingStyle.Quint,Enum.EasingDirection.InOut),{
-Position = UDim2.new(0.992500007, 0, 0.00999999978, 0),
-Size = UDim2.new(0.0850000009, 0, 0.0850000009, 0),
-ImageTransparency = 0.5,
-AnchorPoint = Vector2.new(1, 0)
-}):Play();
-Twen:Create(HomeIcon,TweenInfo.new(0.3),{
-ImageTransparency = 1,
-}):Play()
-ImageButton.Image = "rbxassetid://10002398990"
-Twen:Create(UICorner,TweenInfo.new(0.5),{
-CornerRadius = UDim.new(0, 7)
-}):Play()
-
-InputFrame.Size = UDim2.new(1, 0, 0.12, 0)
+    AstricButton.Visible = false
+    TopRightFrame.Visible = true
+    Twen:Create(MainFrame,TweenInfo.new(0.7,Enum.EasingStyle.Quint),{BackgroundTransparency = 0.4,Size = config.Size}):Play();
+    Twen:Create(MainDropShadow,TweenInfo1,{ImageTransparency = 0.6}):Play();
+    Twen:Create(Headers,TweenInfo1,{BackgroundTransparency = 0.5}):Play();
+    Twen:Create(Logo,TweenInfo1,{ImageTransparency = 0}):Play();
+    Twen:Create(MainFrame,TweenInfo.new(0.3,Enum.EasingStyle.Quint),{Position = UDim2.fromScale(0.5,0.5)}):Play();
+    WindowTable.ElBlurUI.Enabled = true;
+    BlockFrame1.Visible = false
+    Twen:Create(BlockFrame2,TweenInfo1,{BackgroundTransparency = 0.8}):Play();
+    Twen:Create(BlockFrame3,TweenInfo1,{BackgroundTransparency = 0.8}):Play();
+    Twen:Create(TabButtonFrame,TweenInfo1,{Position = UDim2.new(0,0,1,0)}):Play();
+    Twen:Create(MainTabFrame,TweenInfo1,{Position = UDim2.new(0,0,0.13,0)}):Play();
+    Twen:Create(Description,TweenInfo1,{Position = UDim2.fromScale(0.328,0.071)}):Play();
+    Twen:Create(Title,TweenInfo1,{Position = UDim2.fromScale(0.328,0.013)}):Play();
+    Twen:Create(Headers,TweenInfo1,{Position = UDim2.fromScale(0.01,0.015)}):Play();
+    Twen:Create(UICorner,TweenInfo.new(0.5),{CornerRadius = UDim.new(0, 7)}):Play()
+    InputFrame.Size = UDim2.new(1, 0, 0.12, 0)
 else
-Twen:Create(MainFrame,TweenInfo.new(0.5,Enum.EasingStyle.Quint),{BackgroundTransparency = 1,Size = UDim2.new(0.085, 10,0.05, 0)}):Play();
-Twen:Create(MainFrame,TweenInfo.new(0.3,Enum.EasingStyle.Quint),{Position = WindowTable.LastPosition}):Play();
-Twen:Create(MainDropShadow,TweenInfo1,{ImageTransparency = 1}):Play();
-Twen:Create(Headers,TweenInfo1,{BackgroundTransparency = 1}):Play();
-Twen:Create(Logo,TweenInfo1,{ImageTransparency = 1}):Play();
-Twen:Create(TabButtonFrame,TweenInfo1,{Position = UDim2.new(0,0,1.3,0)}):Play();
-Twen:Create(MainTabFrame,TweenInfo1,{Position = UDim2.new(1.5,0,0.13,0)}):Play();
-Twen:Create(Description,TweenInfo1,{Position = UDim2.fromScale(1.5,0.071)}):Play();
-Twen:Create(Headers,TweenInfo1,{Position = UDim2.fromScale(0.01,-0.2)}):Play();
-Twen:Create(UICorner,TweenInfo.new(0.5),{
-CornerRadius = UDim.new(0.1,0)
-}):Play()
-Twen:Create(ImageButton,TweenInfo1,{
-Position = UDim2.new(0.5, 0, 0.5, 0),
-Size = UDim2.new(1,0,1,0),
-ImageTransparency = 1,
-AnchorPoint = Vector2.new(0.5,0.5)
-}):Play();
-Twen:Create(HomeIcon,TweenInfo.new(0.5),{
-ImageTransparency = 0.5,
-}):Play()
-Twen:Create(Title,TweenInfo1,{Position = UDim2.fromScale(1,0.071)}):Play();
-BlockFrame1.Visible = false
-Twen:Create(BlockFrame2,TweenInfo1,{BackgroundTransparency = 1}):Play();
-Twen:Create(BlockFrame3,TweenInfo1,{BackgroundTransparency = 1}):Play();
-WindowTable.ElBlurUI.Enabled = false;
-
-InputFrame.Size = UDim2.new(1, 0, 1, 0)
+    AstricButton.Visible = true
+    TopRightFrame.Visible = false
+    Twen:Create(MainFrame,TweenInfo.new(0.5,Enum.EasingStyle.Quint),{BackgroundTransparency = 1,Size = UDim2.new(0.085, 10,0.05, 0)}):Play();
+    Twen:Create(MainFrame,TweenInfo.new(0.3,Enum.EasingStyle.Quint),{Position = WindowTable.LastPosition}):Play();
+    Twen:Create(MainDropShadow,TweenInfo1,{ImageTransparency = 1}):Play();
+    Twen:Create(Headers,TweenInfo1,{BackgroundTransparency = 1}):Play();
+    Twen:Create(Logo,TweenInfo1,{ImageTransparency = 1}):Play();
+    Twen:Create(TabButtonFrame,TweenInfo1,{Position = UDim2.new(0,0,1.3,0)}):Play();
+    Twen:Create(MainTabFrame,TweenInfo1,{Position = UDim2.new(1.5,0,0.13,0)}):Play();
+    Twen:Create(Description,TweenInfo1,{Position = UDim2.fromScale(1.5,0.071)}):Play();
+    Twen:Create(Headers,TweenInfo1,{Position = UDim2.fromScale(0.01,-0.2)}):Play();
+    Twen:Create(UICorner,TweenInfo.new(0.5),{CornerRadius = UDim.new(0.1,0)}):Play()
+    BlockFrame1.Visible = false
+    Twen:Create(BlockFrame2,TweenInfo1,{BackgroundTransparency = 1}):Play();
+    Twen:Create(BlockFrame3,TweenInfo1,{BackgroundTransparency = 1}):Play();
+    WindowTable.ElBlurUI.Enabled = false;
+    InputFrame.Size = UDim2.new(1, 0, 1, 0)
 end;
 WindowTable.Dropdown:Close()
 if WindowTable.ToggleButton then
-WindowTable.ToggleButton();
+    WindowTable.ToggleButton();
 end;
 task.delay(0.5,WindowTable.ElBlurUI.Update)
 end;
-Twen:Create(ImageButton,TweenInfo1,{
-ImageTransparency = 0.5
-}):Play()
-ImageButton.MouseButton1Click:Connect(function()
-WindowTable.WindowToggle = not WindowTable.WindowToggle
-Update()
+MinimizeBtn.MouseButton1Click:Connect(function()
+    WindowTable.WindowToggle = not WindowTable.WindowToggle
+    Update()
+end)
+AstricButton.MouseButton1Click:Connect(function()
+    if not _dragging then
+        WindowTable.WindowToggle = not WindowTable.WindowToggle
+        Update()
+    end
 end)
 Input.InputBegan:Connect(function(io)
-if io.KeyCode == WindowTable.Keybind then
-WindowTable.WindowToggle = not WindowTable.WindowToggle
-Update()
-end
+    if io.KeyCode == WindowTable.Keybind then
+        WindowTable.WindowToggle = not WindowTable.WindowToggle
+        Update()
+    end
 end)
 ScreenGui.Parent = CoreGui;
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global;
@@ -585,7 +690,7 @@ MainFrame.Size = UDim2.fromOffset(config.Size.X.Offset,config.Size.Y.Offset)
 MainFrame.Active = true;
 MainFrame.ClipsDescendants = true;
 WindowTable.AddEffect = function(color)
-Library.GradientImage(MainFrame,color or Color3.fromRGB(20, 40, 80))
+Library.GradientImage(MainFrame,color or Color3.fromRGB(70, 10, 10))
 end
 Twen:Create(MainFrame,TweenInfo1,{BackgroundTransparency = 0.4,Size = config.Size}):Play();
 WindowTable.ElBlurUI = ElBlurSource.new(MainFrame);
@@ -621,7 +726,7 @@ Logo.Name = "Logo"
 Logo.Parent = Headers
 Logo.Active = true
 Logo.AnchorPoint = Vector2.new(0.5, 0.5)
-Logo.BackgroundColor3 = Color3.fromRGB(60, 130, 255)
+Logo.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
 Logo.BackgroundTransparency = 1.000
 Logo.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Logo.BorderSizePixel = 0
@@ -672,7 +777,7 @@ Twen:Create(Description,TweenInfo2,{TextTransparency = 0.5}):Play();
 BlockFrame1.Name = "BlockFrame1"
 BlockFrame1.Parent = MainFrame
 BlockFrame1.AnchorPoint = Vector2.new(0, 0.5)
-BlockFrame1.BackgroundColor3 = Color3.fromRGB(60, 130, 255)
+BlockFrame1.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
 BlockFrame1.BackgroundTransparency = 1
 BlockFrame1.BorderColor3 = Color3.fromRGB(0, 0, 0)
 BlockFrame1.BorderSizePixel = 0
@@ -688,7 +793,7 @@ UIGradient_3.Parent = BlockFrame1
 BlockFrame3.Name = "BlockFrame3"
 BlockFrame3.Parent = MainFrame
 BlockFrame3.AnchorPoint = Vector2.new(0, 0.5)
-BlockFrame3.BackgroundColor3 = Color3.fromRGB(60, 130, 255)
+BlockFrame3.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
 BlockFrame3.BackgroundTransparency = 1
 BlockFrame3.BorderColor3 = Color3.fromRGB(0, 0, 0)
 BlockFrame3.BorderSizePixel = 0
@@ -703,7 +808,7 @@ UIGradient_4.Parent = BlockFrame3
 BlockFrame2.Name = "BlockFrame2"
 BlockFrame2.Parent = MainFrame
 BlockFrame2.AnchorPoint = Vector2.new(0, 0.5)
-BlockFrame2.BackgroundColor3 = Color3.fromRGB(60, 130, 255)
+BlockFrame2.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
 BlockFrame2.BackgroundTransparency = 1
 BlockFrame2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 BlockFrame2.BorderSizePixel = 0
@@ -813,7 +918,7 @@ MiniDropShadow.ImageTransparency = 0.600
 MiniDropShadow.ScaleType = Enum.ScaleType.Slice
 MiniDropShadow.SliceCenter = Rect.new(49, 49, 450, 450)
 UIStroke.Transparency = 0.900
-UIStroke.Color = Color3.fromRGB(100, 150, 255)
+UIStroke.Color = Color3.fromRGB(210, 70, 70)
 UIStroke.Parent = DropdownFrame
 ValueId.Name = "ValueId"
 ValueId.Parent = DropdownFrame
@@ -948,7 +1053,7 @@ Button.TextColor3 = Color3.fromRGB(0, 0, 0)
 Button.TextSize = 14.000
 Button.TextTransparency = 1.000
 UIStroke.Transparency = 0.900
-UIStroke.Color = Color3.fromRGB(100, 150, 255)
+UIStroke.Color = Color3.fromRGB(210, 70, 70)
 UIStroke.Parent = Selector;
 local caller = function(a)
 if a then
@@ -1158,7 +1263,7 @@ UICorner.Parent = TabButton
 Icon.Name = "Icon"
 Icon.Parent = TabButton
 Icon.AnchorPoint = Vector2.new(0.5, 0.5)
-Icon.BackgroundColor3 = Color3.fromRGB(60, 130, 255)
+Icon.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
 Icon.BackgroundTransparency = 1.000
 Icon.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Icon.BorderSizePixel = 0
@@ -1231,7 +1336,7 @@ UIGradient_3.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 
 UIGradient_3.Parent = Description
 Frame.Parent = TabButton
 Frame.AnchorPoint = Vector2.new(1, 0.5)
-Frame.BackgroundColor3 = Color3.fromRGB(60, 130, 255) 
+Frame.BackgroundColor3 = Color3.fromRGB(200, 30, 30) 
 Frame.BackgroundTransparency = 1
 Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Frame.BorderSizePixel = 0
@@ -1412,7 +1517,7 @@ UICorner_2.Parent = Header
 Icon.Name = "Icon"
 Icon.Parent = Header
 Icon.AnchorPoint = Vector2.new(0.5, 0.5)
-Icon.BackgroundColor3 = Color3.fromRGB(60, 130, 255)
+Icon.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
 Icon.BackgroundTransparency = 1.000
 Icon.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Icon.BorderSizePixel = 0
@@ -1490,7 +1595,7 @@ Size = UDim2.new(0.98,0,0,math.max(SectionAutoUI.AbsoluteContentSize.Y,50) + (Se
 }):Play()
 end)
 UIStroke.Transparency = 1
-UIStroke.Color = Color3.fromRGB(100, 150, 255)
+UIStroke.Color = Color3.fromRGB(210, 70, 70)
 UIStroke.Parent = Section
 Twen:Create(UIStroke,TweenInfo1,{Transparency = 0.9}):Play();
 UIGradient_4.Rotation = 90
@@ -1546,7 +1651,7 @@ UICorner_2.Parent = Header
 Icon.Name = "Icon"
 Icon.Parent = Header
 Icon.AnchorPoint = Vector2.new(0.5, 0.5)
-Icon.BackgroundColor3 = Color3.fromRGB(60, 130, 255)
+Icon.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
 Icon.BackgroundTransparency = 1.000
 Icon.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Icon.BorderSizePixel = 0
@@ -1653,7 +1758,7 @@ Size = UDim2.new(0.98,0,0,30 + SectionAutoUI.AbsoluteContentSize.Y + SectionAuto
 }):Play()
 end)
 UIStroke.Transparency = 0.9
-UIStroke.Color = Color3.fromRGB(100, 150, 255)
+UIStroke.Color = Color3.fromRGB(210, 70, 70)
 UIStroke.Parent = Collapsible
 UIGradient_4.Rotation = 90
 UIGradient_4.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 0.00), NumberSequenceKeypoint.new(0.17, 1.00), NumberSequenceKeypoint.new(0.82, 1.00), NumberSequenceKeypoint.new(1.00, 0.00)}
@@ -1771,7 +1876,7 @@ Button.TextColor3 = Color3.fromRGB(0, 0, 0)
 Button.TextSize = 14.000
 Button.TextTransparency = 1.000
 UIStroke.Transparency = 0.950
-UIStroke.Color = Color3.fromRGB(100, 150, 255)
+UIStroke.Color = Color3.fromRGB(210, 70, 70)
 UIStroke.Parent = FunctionToggle
 System.Name = "System"
 System.Parent = FunctionToggle
@@ -1786,12 +1891,12 @@ System.ZIndex = 18
 UICorner.CornerRadius = UDim.new(0.5, 0)
 UICorner.Parent = System
 UIStroke_2.Transparency = 0.850
-UIStroke_2.Color = Color3.fromRGB(100, 150, 255)
+UIStroke_2.Color = Color3.fromRGB(210, 70, 70)
 UIStroke_2.Parent = System
 Icon.Name = "Icon"
 Icon.Parent = System
 Icon.AnchorPoint = Vector2.new(0.5, 0.5)
-Icon.BackgroundColor3 = Color3.fromRGB(60, 130, 255)
+Icon.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
 Icon.BackgroundTransparency = 0.500
 Icon.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Icon.BorderSizePixel = 0
@@ -1811,10 +1916,10 @@ TextTransparency = 0.02
 Twen:Create(Icon,TweenInfo.new(0.15,Enum.EasingStyle.Quint),{
 Position = UDim2.new(0.75, 0, 0.5, 0),
 BackgroundTransparency = 0.1,
-BackgroundColor3 = Color3.fromRGB(60, 130, 255)
+BackgroundColor3 = Color3.fromRGB(200, 30, 30)
 }):Play()
 Twen:Create(System,TweenInfo.new(0.15,Enum.EasingStyle.Quint),{
-BackgroundColor3 = Color3.fromRGB(30, 70, 150),
+BackgroundColor3 = Color3.fromRGB(140, 15, 15),
 BackgroundTransparency = 0.3
 }):Play()
 else
@@ -1914,7 +2019,7 @@ local Button = Instance.new("TextButton")
 local UIStroke = Instance.new("UIStroke")
 FunctionButton.Name = "FunctionButton"
 FunctionButton.Parent = Content
-FunctionButton.BackgroundColor3 = Color3.fromRGB(30, 50, 100)
+FunctionButton.BackgroundColor3 = Color3.fromRGB(110, 15, 15)
 FunctionButton.BackgroundTransparency = 1
 FunctionButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
 FunctionButton.BorderSizePixel = 0
@@ -1979,7 +2084,7 @@ Button.TextColor3 = Color3.fromRGB(0, 0, 0)
 Button.TextSize = 14.000
 Button.TextTransparency = 1.000
 UIStroke.Transparency = 0.920
-UIStroke.Color = Color3.fromRGB(100, 150, 255)
+UIStroke.Color = Color3.fromRGB(210, 70, 70)
 UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 UIStroke.Parent = FunctionButton
 Button.MouseEnter:Connect(function()
@@ -2074,7 +2179,7 @@ Button.TextColor3 = Color3.fromRGB(0, 0, 0)
 Button.TextSize = 14.000
 Button.TextTransparency = 1.000
 UIStroke.Transparency = 0.950
-UIStroke.Color = Color3.fromRGB(100, 150, 255)
+UIStroke.Color = Color3.fromRGB(210, 70, 70)
 UIStroke.Parent = FunctionKeybind
 System.Name = "System"
 System.Parent = FunctionKeybind
@@ -2089,7 +2194,7 @@ System.ZIndex = 18
 UICorner.CornerRadius = UDim.new(0.349999994, 0)
 UICorner.Parent = System
 UIStroke_2.Transparency = 0.950
-UIStroke_2.Color = Color3.fromRGB(100, 150, 255)
+UIStroke_2.Color = Color3.fromRGB(210, 70, 70)
 UIStroke_2.Parent = System
 Bindkey.Name = "Bindkey"
 Bindkey.Parent = System
@@ -2209,7 +2314,7 @@ UIGradient.Rotation = 90
 UIGradient.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 0.00), NumberSequenceKeypoint.new(0.84, 0.25), NumberSequenceKeypoint.new(1.00, 1.00)}
 UIGradient.Parent = TextInt
 UIStroke.Transparency = 0.950
-UIStroke.Color = Color3.fromRGB(100, 150, 255)
+UIStroke.Color = Color3.fromRGB(210, 70, 70)
 UIStroke.Parent = FunctionSlider
 UICorner.CornerRadius = UDim.new(0, 2)
 UICorner.Parent = FunctionSlider
@@ -2258,7 +2363,7 @@ TFrame.ZIndex = 17
 UICorner_3.CornerRadius = UDim.new(0, 2)
 UICorner_3.Parent = TFrame
 UIStroke_2.Transparency = 0.975
-UIStroke_2.Color = Color3.fromRGB(100, 150, 255)
+UIStroke_2.Color = Color3.fromRGB(210, 70, 70)
 UIStroke_2.Parent = MFrame
 local Holding = false
 local function update(Input)
@@ -2359,7 +2464,7 @@ UIGradient.Rotation = 90
 UIGradient.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 0.00), NumberSequenceKeypoint.new(0.84, 0.25), NumberSequenceKeypoint.new(1.00, 1.00)}
 UIGradient.Parent = TextInt
 UIStroke.Transparency = 0.950
-UIStroke.Color = Color3.fromRGB(100, 150, 255)
+UIStroke.Color = Color3.fromRGB(210, 70, 70)
 UIStroke.Parent = FunctionDropdown
 UICorner.CornerRadius = UDim.new(0, 2)
 UICorner.Parent = FunctionDropdown
@@ -2377,7 +2482,7 @@ MFrame.ZIndex = 18
 UICorner_2.CornerRadius = UDim.new(0, 2)
 UICorner_2.Parent = MFrame
 UIStroke_2.Transparency = 0.975
-UIStroke_2.Color = Color3.fromRGB(100, 150, 255)
+UIStroke_2.Color = Color3.fromRGB(210, 70, 70)
 UIStroke_2.Parent = MFrame
 ValueText.Name = "ValueText"
 ValueText.Parent = MFrame
@@ -2516,7 +2621,7 @@ UIGradient.Rotation = 90
 UIGradient.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 0.00), NumberSequenceKeypoint.new(0.84, 0.25), NumberSequenceKeypoint.new(1.00, 1.00)}
 UIGradient.Parent = TextInt
 UIStroke.Transparency = 0.950
-UIStroke.Color = Color3.fromRGB(100, 150, 255)
+UIStroke.Color = Color3.fromRGB(210, 70, 70)
 UIStroke.Parent = FunctionTextbox
 UICorner.CornerRadius = UDim.new(0, 2)
 UICorner.Parent = FunctionTextbox
@@ -2534,7 +2639,7 @@ MFrame.ZIndex = 18
 UICorner_2.CornerRadius = UDim.new(0, 2)
 UICorner_2.Parent = MFrame
 UIStroke_2.Transparency = 0.975
-UIStroke_2.Color = Color3.fromRGB(100, 150, 255)
+UIStroke_2.Color = Color3.fromRGB(210, 70, 70)
 UIStroke_2.Parent = MFrame
 FileType.Name = "FileType"
 FileType.Parent = MFrame
@@ -2771,7 +2876,7 @@ Button.TextColor3 = Color3.fromRGB(0, 0, 0)
 Button.TextSize = 14.000
 Button.TextTransparency = 1.000
 UIStroke.Transparency = 0.950
-UIStroke.Color = Color3.fromRGB(100, 150, 255)
+UIStroke.Color = Color3.fromRGB(210, 70, 70)
 UIStroke.Parent = FunctionToggle
 System.Name = "System"
 System.Parent = FunctionToggle
@@ -2786,12 +2891,12 @@ System.ZIndex = 18
 UICorner.CornerRadius = UDim.new(0.5, 0)
 UICorner.Parent = System
 UIStroke_2.Transparency = 0.850
-UIStroke_2.Color = Color3.fromRGB(100, 150, 255)
+UIStroke_2.Color = Color3.fromRGB(210, 70, 70)
 UIStroke_2.Parent = System
 Icon.Name = "Icon"
 Icon.Parent = System
 Icon.AnchorPoint = Vector2.new(0.5, 0.5)
-Icon.BackgroundColor3 = Color3.fromRGB(60, 130, 255)
+Icon.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
 Icon.BackgroundTransparency = 0.500
 Icon.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Icon.BorderSizePixel = 0
@@ -2811,10 +2916,10 @@ TextTransparency = 0.02
 Twen:Create(Icon,TweenInfo.new(0.15,Enum.EasingStyle.Quint),{
 Position = UDim2.new(0.75, 0, 0.5, 0),
 BackgroundTransparency = 0.1,
-BackgroundColor3 = Color3.fromRGB(60, 130, 255)
+BackgroundColor3 = Color3.fromRGB(200, 30, 30)
 }):Play()
 Twen:Create(System,TweenInfo.new(0.15,Enum.EasingStyle.Quint),{
-BackgroundColor3 = Color3.fromRGB(30, 70, 150),
+BackgroundColor3 = Color3.fromRGB(140, 15, 15),
 BackgroundTransparency = 0.3
 }):Play()
 else
@@ -2914,7 +3019,7 @@ local Button = Instance.new("TextButton")
 local UIStroke = Instance.new("UIStroke")
 FunctionButton.Name = "FunctionButton"
 FunctionButton.Parent = Section
-FunctionButton.BackgroundColor3 = Color3.fromRGB(30, 50, 100)
+FunctionButton.BackgroundColor3 = Color3.fromRGB(110, 15, 15)
 FunctionButton.BackgroundTransparency = 1
 FunctionButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
 FunctionButton.BorderSizePixel = 0
@@ -2979,7 +3084,7 @@ Button.TextColor3 = Color3.fromRGB(0, 0, 0)
 Button.TextSize = 14.000
 Button.TextTransparency = 1.000
 UIStroke.Transparency = 0.920
-UIStroke.Color = Color3.fromRGB(100, 150, 255)
+UIStroke.Color = Color3.fromRGB(210, 70, 70)
 UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 UIStroke.Parent = FunctionButton
 Button.MouseEnter:Connect(function()
@@ -3074,7 +3179,7 @@ Button.TextColor3 = Color3.fromRGB(0, 0, 0)
 Button.TextSize = 14.000
 Button.TextTransparency = 1.000
 UIStroke.Transparency = 0.950
-UIStroke.Color = Color3.fromRGB(100, 150, 255)
+UIStroke.Color = Color3.fromRGB(210, 70, 70)
 UIStroke.Parent = FunctionKeybind
 System.Name = "System"
 System.Parent = FunctionKeybind
@@ -3089,7 +3194,7 @@ System.ZIndex = 18
 UICorner.CornerRadius = UDim.new(0.349999994, 0)
 UICorner.Parent = System
 UIStroke_2.Transparency = 0.950
-UIStroke_2.Color = Color3.fromRGB(100, 150, 255)
+UIStroke_2.Color = Color3.fromRGB(210, 70, 70)
 UIStroke_2.Parent = System
 Bindkey.Name = "Bindkey"
 Bindkey.Parent = System
@@ -3209,7 +3314,7 @@ UIGradient.Rotation = 90
 UIGradient.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 0.00), NumberSequenceKeypoint.new(0.84, 0.25), NumberSequenceKeypoint.new(1.00, 1.00)}
 UIGradient.Parent = TextInt
 UIStroke.Transparency = 0.950
-UIStroke.Color = Color3.fromRGB(100, 150, 255)
+UIStroke.Color = Color3.fromRGB(210, 70, 70)
 UIStroke.Parent = FunctionSlider
 UICorner.CornerRadius = UDim.new(0, 2)
 UICorner.Parent = FunctionSlider
@@ -3258,7 +3363,7 @@ TFrame.ZIndex = 17
 UICorner_3.CornerRadius = UDim.new(0, 2)
 UICorner_3.Parent = TFrame
 UIStroke_2.Transparency = 0.975
-UIStroke_2.Color = Color3.fromRGB(100, 150, 255)
+UIStroke_2.Color = Color3.fromRGB(210, 70, 70)
 UIStroke_2.Parent = MFrame
 local Holding = false
 local function update(Input)
@@ -3359,7 +3464,7 @@ UIGradient.Rotation = 90
 UIGradient.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 0.00), NumberSequenceKeypoint.new(0.84, 0.25), NumberSequenceKeypoint.new(1.00, 1.00)}
 UIGradient.Parent = TextInt
 UIStroke.Transparency = 0.950
-UIStroke.Color = Color3.fromRGB(100, 150, 255)
+UIStroke.Color = Color3.fromRGB(210, 70, 70)
 UIStroke.Parent = FunctionDropdown
 UICorner.CornerRadius = UDim.new(0, 2)
 UICorner.Parent = FunctionDropdown
@@ -3377,7 +3482,7 @@ MFrame.ZIndex = 18
 UICorner_2.CornerRadius = UDim.new(0, 2)
 UICorner_2.Parent = MFrame
 UIStroke_2.Transparency = 0.975
-UIStroke_2.Color = Color3.fromRGB(100, 150, 255)
+UIStroke_2.Color = Color3.fromRGB(210, 70, 70)
 UIStroke_2.Parent = MFrame
 ValueText.Name = "ValueText"
 ValueText.Parent = MFrame
@@ -3516,7 +3621,7 @@ UIGradient.Rotation = 90
 UIGradient.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 0.00), NumberSequenceKeypoint.new(0.84, 0.25), NumberSequenceKeypoint.new(1.00, 1.00)}
 UIGradient.Parent = TextInt
 UIStroke.Transparency = 0.950
-UIStroke.Color = Color3.fromRGB(100, 150, 255)
+UIStroke.Color = Color3.fromRGB(210, 70, 70)
 UIStroke.Parent = FunctionTextbox
 UICorner.CornerRadius = UDim.new(0, 2)
 UICorner.Parent = FunctionTextbox
@@ -3534,7 +3639,7 @@ MFrame.ZIndex = 18
 UICorner_2.CornerRadius = UDim.new(0, 2)
 UICorner_2.Parent = MFrame
 UIStroke_2.Transparency = 0.975
-UIStroke_2.Color = Color3.fromRGB(100, 150, 255)
+UIStroke_2.Color = Color3.fromRGB(210, 70, 70)
 UIStroke_2.Parent = MFrame
 FileType.Name = "FileType"
 FileType.Parent = MFrame
@@ -3868,7 +3973,7 @@ DropShadow.ImageTransparency = 0.600
 DropShadow.ScaleType = Enum.ScaleType.Slice
 DropShadow.SliceCenter = Rect.new(49, 49, 450, 450)
 UIStroke.Transparency = 1
-UIStroke.Color = Color3.fromRGB(100, 150, 255)
+UIStroke.Color = Color3.fromRGB(210, 70, 70)
 UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 UIStroke.Parent = Button2
 Twen:Create(UIStroke,TweenInfo.new(1,Enum.EasingStyle.Quint,Enum.EasingDirection.InOut),{
@@ -3906,7 +4011,7 @@ DropShadow_2.ImageTransparency = 0.600
 DropShadow_2.ScaleType = Enum.ScaleType.Slice
 DropShadow_2.SliceCenter = Rect.new(49, 49, 450, 450)
 UIStroke_2.Transparency = 1
-UIStroke_2.Color = Color3.fromRGB(100, 150, 255)
+UIStroke_2.Color = Color3.fromRGB(210, 70, 70)
 UIStroke_2.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 UIStroke_2.Parent = TextBox
 Twen:Create(UIStroke_2,TweenInfo.new(1,Enum.EasingStyle.Quint,Enum.EasingDirection.InOut),{
