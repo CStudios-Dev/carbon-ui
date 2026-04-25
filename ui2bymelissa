@@ -40,6 +40,121 @@ local CoreGui = game:GetService("CoreGui")
 local isStudio
 local website = "github.com/Nebula-Softworks"
 
+-- =========================
+-- NEBULAUTH CONFIG
+-- =========================
+local NEBULAUTH = {
+	BASE_URL       = "https://api.nebulauth.com",
+	API_TOKEN      = "mk_at_cUre2FHZUYRo3jsnveeKko8BjBj3KufUONpZNmadhiw",
+	SIGNING_SECRET = "mk_sig_uU2hu11uUVfhvksrqgGWuVhOrlWVeg-UNgY2PyuKqBI",
+}
+
+-- =========================
+-- CRYPTO HELPERS (SHA256 + HMAC)
+-- =========================
+local _bit = bit32 or bit
+
+local _K = {
+	0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+	0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+	0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+	0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+	0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+	0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+	0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+	0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2,
+}
+
+local function _rrotate(x, n)
+	return _bit.bor(_bit.rshift(x, n), _bit.lshift(x, 32 - n))
+end
+
+local function _sha256(msg)
+	local h0,h1,h2,h3 = 0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a
+	local h4,h5,h6,h7 = 0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19
+	local bits = #msg * 8
+	msg = msg .. "\x80"
+	while #msg % 64 ~= 56 do msg = msg .. "\x00" end
+	for i = 7, 0, -1 do msg = msg .. string.char(_bit.band(_bit.rshift(bits, i*8), 0xff)) end
+	for i = 1, #msg, 64 do
+		local w = {}
+		for j = 0, 15 do
+			local b0,b1,b2,b3 = msg:byte(i+j*4, i+j*4+3)
+			w[j+1] = _bit.bor(_bit.lshift(b0,24),_bit.lshift(b1,16),_bit.lshift(b2,8),b3)
+		end
+		for j = 17, 64 do
+			local s0 = _bit.bxor(_rrotate(w[j-15],7),_rrotate(w[j-15],18),_bit.rshift(w[j-15],3))
+			local s1 = _bit.bxor(_rrotate(w[j-2],17),_rrotate(w[j-2],19),_bit.rshift(w[j-2],10))
+			w[j] = _bit.band(w[j-16]+s0+w[j-7]+s1, 0xffffffff)
+		end
+		local a,b,c,d,e,f,g,h = h0,h1,h2,h3,h4,h5,h6,h7
+		for j = 1, 64 do
+			local S1    = _bit.bxor(_rrotate(e,6),_rrotate(e,11),_rrotate(e,25))
+			local ch    = _bit.bxor(_bit.band(e,f),_bit.band(_bit.bnot(e),g))
+			local temp1 = _bit.band(h+S1+ch+_K[j]+w[j], 0xffffffff)
+			local S0    = _bit.bxor(_rrotate(a,2),_rrotate(a,13),_rrotate(a,22))
+			local maj   = _bit.bxor(_bit.band(a,b),_bit.band(a,c),_bit.band(b,c))
+			local temp2 = _bit.band(S0+maj, 0xffffffff)
+			h,g,f,e = g,f,e,_bit.band(d+temp1, 0xffffffff)
+			d,c,b,a = c,b,a,_bit.band(temp1+temp2, 0xffffffff)
+		end
+		h0=_bit.band(h0+a,0xffffffff); h1=_bit.band(h1+b,0xffffffff)
+		h2=_bit.band(h2+c,0xffffffff); h3=_bit.band(h3+d,0xffffffff)
+		h4=_bit.band(h4+e,0xffffffff); h5=_bit.band(h5+f,0xffffffff)
+		h6=_bit.band(h6+g,0xffffffff); h7=_bit.band(h7+h,0xffffffff)
+	end
+	return string.format("%08x%08x%08x%08x%08x%08x%08x%08x",h0,h1,h2,h3,h4,h5,h6,h7)
+end
+
+local function _hmac_sha256(key, msg)
+	if #key > 64 then
+		local hex = _sha256(key); key = ""
+		for i = 1, #hex, 2 do key = key .. string.char(tonumber(hex:sub(i,i+1),16)) end
+	end
+	local ipad, opad = "", ""
+	for i = 1, 64 do
+		local b = i <= #key and key:byte(i) or 0
+		ipad = ipad .. string.char(_bit.bxor(b, 0x36))
+		opad = opad .. string.char(_bit.bxor(b, 0x5c))
+	end
+	local inner_hex = _sha256(ipad .. msg)
+	local inner_bytes = ""
+	for i = 1, #inner_hex, 2 do inner_bytes = inner_bytes .. string.char(tonumber(inner_hex:sub(i,i+1),16)) end
+	return _sha256(opad .. inner_bytes)
+end
+
+local function ValidateKey(key)
+	local body_obj     = { key = key, requestId = HttpService:GenerateGUID(false) }
+	local body_string  = HttpService:JSONEncode(body_obj)
+	local body_hash    = _sha256(body_string)
+	local timestamp_ms = tostring(math.floor(workspace:GetServerTimeNow() * 1000))
+	local nonce        = HttpService:GenerateGUID(false)
+	local canonical    = "POST\n/api/v1/keys/verify\n" .. timestamp_ms .. "\n" .. nonce .. "\n" .. body_hash
+	local signature    = _hmac_sha256(NEBULAUTH.SIGNING_SECRET, canonical)
+	local headers = {
+		["Content-Type"]  = "application/json",
+		["Authorization"] = "Bearer " .. NEBULAUTH.API_TOKEN,
+		["X-Timestamp"]   = timestamp_ms,
+		["X-Nonce"]       = nonce,
+		["X-Signature"]   = signature,
+		["X-Body-Sha256"] = body_hash,
+	}
+	local hwid = gethwid and gethwid()
+	if hwid and hwid ~= "" then headers["X-Hwid"] = hwid end
+	local ok_req, res = pcall(function()
+		return request({
+			Url     = NEBULAUTH.BASE_URL .. "/api/v1/keys/verify",
+			Method  = "POST",
+			Headers = headers,
+			Body    = body_string,
+		})
+	end)
+	if not ok_req or not res or not res.Body then return false end
+	local ok_parse, data = pcall(HttpService.JSONDecode, HttpService, res.Body)
+	if not ok_parse then return false end
+	return data and data.valid == true
+end
+
 if RunService:IsStudio() then
 	isStudio = true
 end
@@ -1840,119 +1955,6 @@ local function unpackt(array : table)
 	return val
 end
 
--- =========================
--- NEBULAUTH KEY VALIDATION
--- =========================
-local NEBULAUTH = {
-	API_TOKEN      = "mk_at_cUre2FHZUYRo3jsnveeKko8BjBj3KufUONpZNmadhiw",
-	SIGNING_SECRET = "mk_sig_uU2hu11uUVfhvksrqgGWuVhOrlWVeg-UNgY2PyuKqBI",
-}
-
-local _bit = bit32 or bit
-
-local function _rrotate(x, n)
-	return _bit.bor(_bit.rshift(x, n), _bit.lshift(x, 32 - n))
-end
-
-local _K = {
-	0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
-	0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
-	0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
-	0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
-	0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
-	0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
-	0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
-	0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2,
-}
-
-local function _sha256(msg)
-	local h0,h1,h2,h3 = 0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a
-	local h4,h5,h6,h7 = 0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19
-	local bits = #msg * 8
-	msg = msg .. "\x80"
-	while #msg % 64 ~= 56 do msg = msg .. "\x00" end
-	for i = 7, 0, -1 do
-		msg = msg .. string.char(_bit.band(_bit.rshift(bits, i*8), 0xff))
-	end
-	for i = 1, #msg, 64 do
-		local w = {}
-		for j = 0, 15 do
-			local b0,b1,b2,b3 = msg:byte(i+j*4, i+j*4+3)
-			w[j+1] = _bit.bor(_bit.lshift(b0,24),_bit.lshift(b1,16),_bit.lshift(b2,8),b3)
-		end
-		for j = 17, 64 do
-			local s0 = _bit.bxor(_rrotate(w[j-15],7), _rrotate(w[j-15],18), _bit.rshift(w[j-15],3))
-			local s1 = _bit.bxor(_rrotate(w[j-2],17), _rrotate(w[j-2],19),  _bit.rshift(w[j-2],10))
-			w[j] = _bit.band(w[j-16]+s0+w[j-7]+s1, 0xffffffff)
-		end
-		local a,b,c,d,e,f,g,h = h0,h1,h2,h3,h4,h5,h6,h7
-		for j = 1, 64 do
-			local S1  = _bit.bxor(_rrotate(e,6),  _rrotate(e,11),  _rrotate(e,25))
-			local ch  = _bit.bxor(_bit.band(e,f),  _bit.band(_bit.bnot(e),g))
-			local t1  = _bit.band(h+S1+ch+_K[j]+w[j], 0xffffffff)
-			local S0  = _bit.bxor(_rrotate(a,2),  _rrotate(a,13),  _rrotate(a,22))
-			local maj = _bit.bxor(_bit.band(a,b),  _bit.band(a,c),  _bit.band(b,c))
-			local t2  = _bit.band(S0+maj, 0xffffffff)
-			h,g,f,e = g,f,e,_bit.band(d+t1,0xffffffff)
-			d,c,b,a = c,b,a,_bit.band(t1+t2,0xffffffff)
-		end
-		h0=_bit.band(h0+a,0xffffffff) h1=_bit.band(h1+b,0xffffffff)
-		h2=_bit.band(h2+c,0xffffffff) h3=_bit.band(h3+d,0xffffffff)
-		h4=_bit.band(h4+e,0xffffffff) h5=_bit.band(h5+f,0xffffffff)
-		h6=_bit.band(h6+g,0xffffffff) h7=_bit.band(h7+h,0xffffffff)
-	end
-	return string.format("%08x%08x%08x%08x%08x%08x%08x%08x",h0,h1,h2,h3,h4,h5,h6,h7)
-end
-
-local function _hmac(key, msg)
-	if #key > 64 then
-		local hex = _sha256(key)
-		key = ""
-		for i = 1, #hex, 2 do key = key .. string.char(tonumber(hex:sub(i,i+1),16)) end
-	end
-	local ipad, opad = "", ""
-	for i = 1, 64 do
-		local bv = i <= #key and key:byte(i) or 0
-		ipad = ipad .. string.char(_bit.bxor(bv, 0x36))
-		opad = opad .. string.char(_bit.bxor(bv, 0x5c))
-	end
-	local inner = _sha256(ipad .. msg)
-	local ib = ""
-	for i = 1, #inner, 2 do ib = ib .. string.char(tonumber(inner:sub(i,i+1),16)) end
-	return _sha256(opad .. ib)
-end
-
-local function ValidateKey(key)
-	local body   = HttpService:JSONEncode({ key = key, requestId = HttpService:GenerateGUID(false) })
-	local bHash  = _sha256(body)
-	local ts     = tostring(math.floor(workspace:GetServerTimeNow() * 1000))
-	local nonce  = HttpService:GenerateGUID(false)
-	local canon  = "POST\n/keys/verify\n" .. ts .. "\n" .. nonce .. "\n" .. bHash
-	local sig    = _hmac(NEBULAUTH.SIGNING_SECRET, canon)
-	local headers = {
-		["Content-Type"]  = "application/json",
-		["Authorization"] = "Bearer " .. NEBULAUTH.API_TOKEN,
-		["X-Timestamp"]   = ts,
-		["X-Nonce"]       = nonce,
-		["X-Signature"]   = sig,
-		["X-Body-Sha256"] = bHash,
-	}
-	if gethwid and gethwid() ~= "" then headers["X-Hwid"] = gethwid() end
-	local ok, res = pcall(function()
-		return request({
-			Url     = "https://api.nebulauth.com/api/v1/keys/verify",
-			Method  = "POST",
-			Headers = headers,
-			Body    = body,
-		})
-	end)
-	if not ok or not res or not res.Body then return false, "Failed to connect" end
-	local pok, data = pcall(HttpService.JSONDecode, HttpService, res.Body)
-	if not pok then return false, "Invalid response" end
-	if data and data.valid == true then return true, data end
-	return false, (data and (data.reason or data.message)) or "Invalid key"
-end
-
 -- Interface Management
 local AstricUI = isStudio and script.Parent:WaitForChild("Astric UI") or game:GetObjects("rbxassetid://86467455075715")[1]
 
@@ -2479,11 +2481,9 @@ function Astric:CreateWindow(WindowSettings)
 		local direc = WindowSettings.KeySettings.SaveInRoot and "Astric/Configurations/" .. WindowSettings.ConfigSettings.RootFolder .. "/" .. WindowSettings.ConfigSettings.ConfigFolder .. "/Key System/" or "Astric/Configurations/" ..  WindowSettings.ConfigSettings.ConfigFolder .. "/Key System/"
 
 		if isfile and isfile(direc .. WindowSettings.KeySettings.FileName .. ".luna") then
-			for i, Key in ipairs(WindowSettings.KeySettings.Key) do
-				if string.find(readfile(direc .. WindowSettings.KeySettings.FileName .. ".luna"), Key) then
-					Passthrough = true
-					break
-				end
+			local savedKey = readfile(direc .. WindowSettings.KeySettings.FileName .. ".luna")
+			if savedKey and #savedKey > 0 and ValidateKey(savedKey) then
+				Passthrough = true
 			end
 		end
 
@@ -2532,15 +2532,9 @@ function Astric:CreateWindow(WindowSettings)
 
 			KeySystem.Action.Submit.Interact.MouseButton1Click:Connect(function()
 				if #KeySystem.Input.InputBox.Text == 0 then return end
-				local KeyFound = false
-				local FoundKey = ''
-				for _, Key in ipairs(WindowSettings.KeySettings.Key) do
-					if KeySystem.Input.InputBox.Text == Key then
-						KeyFound = true
-						FoundKey = Key
-						break
-					end
-				end
+				local inputKey = KeySystem.Input.InputBox.Text
+				local KeyFound = ValidateKey(inputKey)
+				local FoundKey = inputKey
 				if KeyFound then 
 					for _, instance in pairs(KeySystem:GetDescendants()) do
 						if instance.ClassName ~= "UICorner" and instance.ClassName ~= "UIPadding" then
